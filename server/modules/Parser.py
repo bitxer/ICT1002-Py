@@ -1,5 +1,5 @@
 import os
-import pandas as pd
+from pandas import read_csv, read_excel, read_json
 
 class Reader():
     def __init__(self, path, type):
@@ -48,12 +48,17 @@ class Reader():
         Exception
             If read is unsuccessful
         '''
-        _csv = lambda : pd.read_csv(self.path)
-        _tsv = lambda : pd.read_csv(self.path, sep='\t')
-        _json = lambda : pd.read_json(self.path)
-        _excel = lambda : pd.read_excel(self.path)
+        _csv = lambda : read_csv(self.path)
+        _tsv = lambda : read_csv(self.path, sep='\t')
+        _json = lambda : read_json(self.path)
+        _excel = lambda : read_excel(self.path)
+        _syslog = lambda : _read_syslog()
 
         return eval('{}()'.format(self.type))
+
+    def _read_syslog(self):
+        # Implement syslog parsing
+        pass
 
 
 class Writer():
