@@ -6,7 +6,7 @@ from tensorflow.keras.utils import to_categorical, normalize
 import numpy as np
 import pandas as pd
 from sklearn.utils import shuffle
-
+from datetime import datetime
 
 output = {}
 atks = {
@@ -47,6 +47,8 @@ def run_predict(fileName):
 
     #df1 =df.pop('Label')
     logID = df.pop('ID')
+    time = df[['Timestamp']].values
+    print(df.shape)
     df_test = normalize(df.values)
 
     model = load_model_csv()
@@ -56,10 +58,13 @@ def run_predict(fileName):
 
 
     predictions = model.predict_proba(df_test)
-    for p,q in zip(predictions, logID):
-        output[q] = atks[np.argmax(p)]
+    for p,q,t in zip(predictions, logID,time):
+        output[q] = {"IsAtk": 0,
+                     "Atk": atks[np.argmax(p)],
+                     "Time":t[0]
+                     }
 
-    return output
+    return {datetime.now().ctime() :output}
 
 if __name__=="__main__":
     output = run_predict("small_test_no_labels.csv")
