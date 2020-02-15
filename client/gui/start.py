@@ -3,6 +3,8 @@ from PyQt5.QtWidgets import QMainWindow, QApplication
 from PyQt5.QtChart import QChart, QChartView, QPieSeries
 from PyQt5.QtGui import QPainter, QPen
 from PyQt5.QtCore import Qt
+from devtools import filedata
+import ast
 
 import sys
 
@@ -12,23 +14,57 @@ class MainWindow(QMainWindow):
         #Load the UI Page
         uic.loadUi('main.ui', self)
 
-        self.create_piechart()
+        data = filedata().strip("\n")
+        data = ast.literal_eval(data)
 
-    def create_piechart(self):
+        self.displaychart("piechart1", data)
+    
+
+    def displaychart(self, widgetname, data):
+        piechart = self.findChild(QChartView, widgetname)
+        chartdata = Piechart(data, "Attacks").create()
+        piechart.setChart(chartdata)
+        piechart.setRenderHint(QPainter.Antialiasing)
+
+class Piechart:
+    def __init__(self, data, title):
+        self.data = data
+        self.title = title
+
+    def datahandler(self):
+        summary = {
+            'AtkCount' : 0,
+            'Atk' : {},
+        }
+
         series = QPieSeries()
-        series.append("Bot", 10)
-        series.append("Brute Force -Web", 10)
-        series.append("Brute Force -XSS", 50)
-        series.append("DDOS attack -HOIC", 30)
+
+        for k,v in self.data.items():
+            if v['IsAtk'] == 1:
+                summary['AtkCount'] = summary['AtkCount'] + 1
+            
+            if v['Atk'] not in summary['Atk']:
+                summary['Atk'][v['Atk']] = 1
+            else:
+                summary['Atk'][v['Atk']] += 1
+
+        print(summary)
+
+        for atk, val in summary['Atk'].items():
+            series.append(atk, val)
+
+        return series
+            
+
+    def create(self):
+        series = self.datahandler()
 
         chart = QChart()
         chart.addSeries(series)
         chart.setAnimationOptions(QChart.SeriesAnimations)
-        chart.setTitle("Attacks")
+        chart.setTitle(self.title)
 
-        piechart1 = self.findChild(QChartView, "piechart1")
-        piechart1.setChart(chart)
-        piechart1.setRenderHint(QPainter.Antialiasing)
+        return chart
 
 
 def main():
