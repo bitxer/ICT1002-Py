@@ -9,7 +9,6 @@ import sys
 class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
-
         #Load the UI Page
         uic.loadUi('main.ui', self)
 
@@ -18,15 +17,15 @@ class MainWindow(QMainWindow):
     def create_piechart(self):
         series = QPieSeries()
         series.append("Bot", 10)
-        series.append("Brute Force -Web", 30)
+        series.append("Brute Force -Web", 10)
         series.append("Brute Force -XSS", 50)
-        series.append("DDOS attack-HOIC", 20)
+        series.append("DDOS attack -HOIC", 30)
 
         chart = QChart()
         chart.addSeries(series)
-        # chart.setAnimationOptions(QChart.SeriesAnimation)
+        chart.setAnimationOptions(QChart.SeriesAnimations)
         chart.setTitle("Attacks")
-        
+
         piechart1 = self.findChild(QChartView, "piechart1")
         piechart1.setChart(chart)
         piechart1.setRenderHint(QPainter.Antialiasing)
@@ -35,7 +34,7 @@ class MainWindow(QMainWindow):
 def main():
     app = QApplication(sys.argv)
     main = MainWindow()
-    main.show()
+    main.showMaximized()
     sys.exit(app.exec_())
 
 if __name__ == '__main__':         
