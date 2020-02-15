@@ -43,7 +43,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QChartView" name="graphicsView">
+           <widget class="QChartView" name="chart2">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -56,6 +56,12 @@
         </item>
         <item row="0" column="0">
          <widget class="QLabel" name="header">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="maximumSize">
            <size>
             <width>16777215</width>
@@ -79,7 +85,7 @@
         <item row="2" column="0">
          <layout class="QVBoxLayout" name="datalayout">
           <item>
-           <widget class="QTableWidget" name="tableWidget">
+           <widget class="QTableWidget" name="datatable">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -109,12 +115,6 @@
     <property name="title">
      <string>File</string>
     </property>
-    <widget class="QMenu" name="menuOpen">
-     <property name="title">
-      <string>Open</string>
-     </property>
-    </widget>
-    <addaction name="menuOpen"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -122,6 +122,11 @@
   <action name="actionCtrl_N">
    <property name="text">
     <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionNew">
+   <property name="text">
+    <string>New</string>
    </property>
   </action>
  </widget>
