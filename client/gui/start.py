@@ -14,22 +14,26 @@ class MainWindow(QMainWindow):
         #Load the UI Page
         uic.loadUi('main.ui', self)
 
-        data = filedata().strip("\n")
-        data = ast.literal_eval(data)
+        rawdata = filedata().strip("\n")
+        rawdata = ast.literal_eval(rawdata)
 
-        self.displaychart("piechart1", data)
-    
+        data = DataHandler(rawdata)
 
-    def displaychart(self, widgetname, data):
+        summary = data.getSummary()
+        chartseries = data.getSeries()
+
+        self.displaychart("piechart1", chartseries, "Attack Types")
+
+    def displaychart(self, widgetname, chartseries, header):
         piechart = self.findChild(QChartView, widgetname)
-        chartdata = Piechart(data, "Attacks").create()
+        chartdata = Piechart(chartseries, header).create()
         piechart.setChart(chartdata)
         piechart.setRenderHint(QPainter.Antialiasing)
 
-class Piechart:
-    def __init__(self, data, title):
+class DataHandler:
+    def __init__(self, data):
         self.data = data
-        self.title = title
+        self.datahandler()
 
     def datahandler(self):
         summary = {
@@ -53,14 +57,24 @@ class Piechart:
         for atk, val in summary['Atk'].items():
             series.append(atk, val)
 
-        return series
-            
+        self.summary = summary
+        self.series = series
+
+    def getSummary(self):
+        return self.summary
+
+    def getSeries(self):
+        return self.series
+
+
+class Piechart:
+    def __init__(self, chartseries, title):
+        self.chartseries = chartseries
+        self.title = title
 
     def create(self):
-        series = self.datahandler()
-
         chart = QChart()
-        chart.addSeries(series)
+        chart.addSeries(self.chartseries)
         chart.setAnimationOptions(QChart.SeriesAnimations)
         chart.setTitle(self.title)
 
