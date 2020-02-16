@@ -108,8 +108,7 @@ class DataTable:
         for k,v in self.tabledata.items():
             index = k
             rowcount = 0
-            # print(k)
-            # print(v)
+
             for k,v in v.items():
                 if k == 'IsAtk':
                     v = 'Yes'
@@ -118,23 +117,7 @@ class DataTable:
                     v = time.strftime('%m/%d/%Y %H:%M:%S', time.gmtime(v))
 
                 self.tableobj.setItem(int(index), rowcount, QTableWidgetItem(str(v)))
-                # print(k, v)
                 rowcount += 1
-
-        # header = self.tableobj.horizontalHeader()       
-        # header.setSectionResizeMode(0, QHeaderView.ResizeToContents)
-        # header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
-        # header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
-        # header.setSectionResizeMode(3, QHeaderView.ResizeToContents)
-
-
-        # self.tableobj.setRowCount(4)
-        # self.tableobj.setColumnCount(5)
-
-        # self.tableobj.setItem(0,0, QTableWidgetItem("Cell (3,1)"))
-        # self.tableobj.setItem(0,1, QTableWidgetItem("Cell (3,2)"))
-        # self.tableobj.setItem(1,0, QTableWidgetItem("Cell (4,1)"))
-        # self.tableobj.setItem(1,1, QTableWidgetItem("Cell (4,2)"))
 
 class Piechart:
     def __init__(self, chartseries, title):
@@ -152,9 +135,6 @@ class Piechart:
         chart.setAnimationOptions(QChart.SeriesAnimations)
         chart.setTitle(self.title)
         chart.setTheme(5)
-        print("HI")
-        print(type(chart.theme()))
-        print("BYE")
         return chart
 
 
