@@ -30,9 +30,9 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>-501</y>
-         <width>952</width>
-         <height>1353</height>
+         <y>0</y>
+         <width>944</width>
+         <height>1363</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -169,13 +169,15 @@
      <x>0</x>
      <y>0</y>
      <width>989</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionUpload"/>
+    <addaction name="actionExit"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -188,6 +190,22 @@
   <action name="actionNew">
    <property name="text">
     <string>New</string>
+   </property>
+  </action>
+  <action name="actionUpload">
+   <property name="text">
+    <string>Upload</string>
+   </property>
+   <property name="statusTip">
+    <string>0</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
    </property>
   </action>
  </widget>
