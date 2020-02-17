@@ -1,4 +1,4 @@
-from PyQt5 import uic 
+from PyQt5 import uic, QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QApplication, QTableWidget,QTableWidgetItem, QHeaderView
 from PyQt5.QtChart import QChart, QChartView, QPieSeries, QPieSlice
 from PyQt5.QtGui import QPainter, QPen
@@ -11,7 +11,7 @@ from PyQt5.QtWidgets import QApplication
 import breeze_resources
 import time
 
-class MainWindow(QMainWindow):
+class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
         #Load the UI Page
@@ -24,7 +24,8 @@ class MainWindow(QMainWindow):
 
         self.summary = self.data.getSummary()
         self.chartseries = self.data.getSeries()
-
+        self.actionUpload.triggered.connect(self.addItem)
+        self.actionExit.triggered.connect(self.exit)
         self.displaychart("attackchart", self.chartseries, "Attack Types")
         self.displaytable("datatable")
 
@@ -37,6 +38,13 @@ class MainWindow(QMainWindow):
     def displaytable(self, widgetname):
         table = self.findChild(QTableWidget, widgetname)
         display = DataTable(table, self.data.getData()).create()
+    
+    def addItem(self):
+        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(None, "Select Text File", "", "Text Files (*.txt)")
+        print (fileName)
+        
+    def exit(self):
+        sys.exit()
 
 
 
