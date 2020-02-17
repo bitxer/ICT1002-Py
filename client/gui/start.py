@@ -55,11 +55,11 @@ class DataHandler:
         }
 
         series = QPieSeries()
-
+        
         for k,v in self.data.items():
             if v['IsAtk'] == 1:
                 summary['AtkCount'] = summary['AtkCount'] + 1
-            
+
             if v['Atk'] not in summary['Atk']:
                 summary['Atk'][v['Atk']] = 1
             else:
