@@ -32,7 +32,7 @@
          <x>0</x>
          <y>0</y>
          <width>952</width>
-         <height>1353</height>
+         <height>1564</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -49,6 +49,11 @@
             <width>16777215</width>
             <height>100</height>
            </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
           </property>
           <property name="autoFillBackground">
            <bool>false</bool>
@@ -112,7 +117,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Top IPs Hits</string>
+               <string>Top 5 IPs Hits</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
@@ -139,7 +144,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Top Protocols : Ports</string>
+               <string>Top 5 Protocols : Ports Hits</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
@@ -157,7 +162,7 @@
               <property name="minimumSize">
                <size>
                 <width>150</width>
-                <height>400</height>
+                <height>450</height>
                </size>
               </property>
               <property name="font">
@@ -166,7 +171,7 @@
                </font>
               </property>
               <attribute name="horizontalHeaderVisible">
-               <bool>false</bool>
+               <bool>true</bool>
               </attribute>
               <attribute name="horizontalHeaderMinimumSectionSize">
                <number>100</number>
@@ -175,10 +180,10 @@
                <bool>true</bool>
               </attribute>
               <attribute name="verticalHeaderVisible">
-               <bool>false</bool>
+               <bool>true</bool>
               </attribute>
               <attribute name="verticalHeaderMinimumSectionSize">
-               <number>100</number>
+               <number>80</number>
               </attribute>
               <attribute name="verticalHeaderDefaultSectionSize">
                <number>100</number>
@@ -199,7 +204,7 @@
               <property name="minimumSize">
                <size>
                 <width>150</width>
-                <height>400</height>
+                <height>450</height>
                </size>
               </property>
               <property name="font">
@@ -208,7 +213,7 @@
                </font>
               </property>
               <attribute name="horizontalHeaderVisible">
-               <bool>false</bool>
+               <bool>true</bool>
               </attribute>
               <attribute name="horizontalHeaderMinimumSectionSize">
                <number>100</number>
@@ -220,10 +225,10 @@
                <bool>true</bool>
               </attribute>
               <attribute name="verticalHeaderVisible">
-               <bool>false</bool>
+               <bool>true</bool>
               </attribute>
               <attribute name="verticalHeaderMinimumSectionSize">
-               <number>100</number>
+               <number>80</number>
               </attribute>
               <attribute name="verticalHeaderDefaultSectionSize">
                <number>100</number>
@@ -274,8 +279,8 @@
             </property>
             <property name="minimumSize">
              <size>
-              <width>0</width>
-              <height>400</height>
+              <width>800</width>
+              <height>600</height>
              </size>
             </property>
             <property name="font">

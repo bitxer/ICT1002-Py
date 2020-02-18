@@ -22,8 +22,9 @@ class MainWindow(QMainWindow):
         rawdata = ast.literal_eval(rawdata)
 
         # data
-        pandata = pd.DataFrame.from_dict(rawdata)
-        self.data = DataHandler(pandata)
+        df = pd.DataFrame.from_dict(rawdata)
+
+        self.data = DataHandler(df)
         self.summary = self.data.getSummary()
         self.chartseries = self.data.getSeries()
         
@@ -35,8 +36,8 @@ class MainWindow(QMainWindow):
         self.displaychart("attackchart", self.chartseries, "Attack Types")
         self.displaytable("datatable", self.data.getData())
         # print(self.data.getData())
-        self.displaytop("topip", self.data.gettopIPs())
-        # self.displaytop("topports", self.data.gettopProtocols())
+        self.displaytop("topip", self.data.getTopIPs(), ['IP Addresses', 'Count'])
+        self.displaytop("topports", self.data.getTopProtocols(), ['Protocol : Port', 'Count'])
         # print(pd.DataFrame(self.data.topIPs(), index=[0]).transform)
         # self.displaytable("toplist", pd.DataFrame(self.data.topIPs(), index=[0]))
 
@@ -46,31 +47,24 @@ class MainWindow(QMainWindow):
         self.piechart.setChart(chartdata)
         self.piechart.setRenderHint(QPainter.Antialiasing)
 
-    def displaytop(self, widgetname, data):
-        iptable = self.findChild(QTableWidget, widgetname)
-        iptable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        iptable.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
-        iptable.setColumnCount(2)
-        iptable.setRowCount(5)
+    def displaytop(self, widgetname, data, header):
+        table = self.findChild(QTableWidget, widgetname)
+        table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        table.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
+        table.setColumnCount(2)
+        table.setRowCount(5)
+        table.setHorizontalHeaderLabels(header)
         index = 0
         for k,v in data.items():
             # print(k,v)
-            iptable.setItem(int(index),0, QTableWidgetItem(k))
-            iptable.setItem(int(index),1, QTableWidgetItem(str(v)))
+            table.setItem(int(index),0, QTableWidgetItem(k))
+            table.setItem(int(index),1, QTableWidgetItem(str(v)))
             index += 1
 
     def displaytable(self, widgetname, data):
         table = self.findChild(QTableWidget, widgetname)
         table.setSortingEnabled(True)
         DataTable(table, data).create()
-        
-
-    # def displaylist(self, widgetname):
-    #     listview = self.findChild(QListWidget, widgetname)
-    #     for k,v in self.data.topIPs().items():
-    #         # listview.addItems()
-    #         print(k,v)
-
     
     def addItem(self):
         fileName, _ = QtWidgets.QFileDialog.getOpenFileName(None, "Select Text File", "", "Text Files (*.txt)")
@@ -86,7 +80,7 @@ class DataHandler:
         self.data = data
         self.process()
         self.topIPs()
-        self.topProto()
+        self.topProtocols()
 
     def process(self):
         summary = {
@@ -97,7 +91,12 @@ class DataHandler:
             'Atk' : {},
         }
 
+        protoports = {}
+        # print(self.data)
+
         series = QPieSeries()
+
+        counter = 0
         
         for k,v in self.data.items():
             if v['IsAtk'] == 1:
@@ -114,6 +113,8 @@ class DataHandler:
                 summary['IP'][v['IP']] += 1
 
             if v['Protocol'] not in summary['Protocol']:
+                # print(v)
+                # print('----')
                 summary['Protocol'][v['Protocol']] = 1
             else:
                 summary['Protocol'][v['Protocol']] += 1
@@ -123,13 +124,17 @@ class DataHandler:
             else:
                 summary['Port'][v['Port']] += 1
 
-        print(summary)
+            if v['Protocol'] + ':' + str(v['Port']) not in protoports:
+                protoports[v['Protocol'] + ':' + str(v['Port'])] = 1
+            else:
+                protoports[v['Protocol'] + ':' + str(v['Port'])] += 1
 
         for atk, val in summary['Atk'].items():
             series.append(atk, val)
 
         self.summary = summary
         self.series = series
+        self.protoports = protoports
 
     def topIPs(self):
         top = sorted(self.summary['IP'], key=self.summary['IP'].get, reverse=True)
@@ -139,10 +144,13 @@ class DataHandler:
 
         self.topips = output
 
-    def topProto(self):
-        print(self.summary['Protocol'])
-        top = sorted(self.summary['Protocol'], key=self.summary['Protocol'].get, reverse=True)[:10]
-        print(top)
+    def topProtocols(self):
+        top = sorted(self.protoports, key=self.protoports.get, reverse=True)
+        output = {}
+        for x in top:
+            output[x] = self.protoports[x]
+        
+        self.protoports = output
 
     def getSummary(self):
         return self.summary
@@ -153,8 +161,11 @@ class DataHandler:
     def getData(self):
         return self.data
 
-    def gettopIPs(self):
+    def getTopIPs(self):
         return self.topips
+
+    def getTopProtocols(self):
+        return self.protoports
 
 class DataTable:
     def __init__(self, tableobj, tabledata):
