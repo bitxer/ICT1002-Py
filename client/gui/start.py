@@ -35,7 +35,8 @@ class MainWindow(QMainWindow):
         self.displaychart("attackchart", self.chartseries, "Attack Types")
         self.displaytable("datatable", self.data.getData())
         # print(self.data.getData())
-        self.displaytop("toplist", self.data.gettopIPs())
+        self.displaytop("topip", self.data.gettopIPs())
+        # self.displaytop("topports", self.data.gettopProtocols())
         # print(pd.DataFrame(self.data.topIPs(), index=[0]).transform)
         # self.displaytable("toplist", pd.DataFrame(self.data.topIPs(), index=[0]))
 
@@ -53,14 +54,16 @@ class MainWindow(QMainWindow):
         iptable.setRowCount(5)
         index = 0
         for k,v in data.items():
-            print(k,v)
+            # print(k,v)
             iptable.setItem(int(index),0, QTableWidgetItem(k))
             iptable.setItem(int(index),1, QTableWidgetItem(str(v)))
             index += 1
 
     def displaytable(self, widgetname, data):
         table = self.findChild(QTableWidget, widgetname)
+        table.setSortingEnabled(True)
         DataTable(table, data).create()
+        
 
     # def displaylist(self, widgetname):
     #     listview = self.findChild(QListWidget, widgetname)
@@ -83,6 +86,7 @@ class DataHandler:
         self.data = data
         self.process()
         self.topIPs()
+        self.topProto()
 
     def process(self):
         summary = {
@@ -119,7 +123,7 @@ class DataHandler:
             else:
                 summary['Port'][v['Port']] += 1
 
-        # print(summary)
+        print(summary)
 
         for atk, val in summary['Atk'].items():
             series.append(atk, val)
@@ -128,13 +132,17 @@ class DataHandler:
         self.series = series
 
     def topIPs(self):
-        # top5list = sorted(self.summary['IP'], key=self.summary.get, reverse=True)
         top = sorted(self.summary['IP'], key=self.summary['IP'].get, reverse=True)
         output = {}
         for x in top:
             output[x] = self.summary['IP'][x]
 
         self.topips = output
+
+    def topProto(self):
+        print(self.summary['Protocol'])
+        top = sorted(self.summary['Protocol'], key=self.summary['Protocol'].get, reverse=True)[:10]
+        print(top)
 
     def getSummary(self):
         return self.summary
@@ -158,6 +166,7 @@ class DataTable:
     def create(self):
         self.tableobj.setColumnCount(len(self.tabledata.values))
         self.tableobj.setRowCount(len(self.tabledata.keys()))
+        self.tableobj.setHorizontalHeaderLabels(["Is Attack", "Attack", "IP Address", "Protocol", "Port", "Time"])
         for k,v in self.tabledata.items():
             index = k
             rowcount = 0
@@ -171,6 +180,8 @@ class DataTable:
 
                 self.tableobj.setItem(int(index), rowcount, QTableWidgetItem(str(v)))
                 rowcount += 1
+
+        
 
 class Piechart:
     def __init__(self, chartseries, title):
