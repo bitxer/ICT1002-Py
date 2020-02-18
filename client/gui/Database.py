@@ -16,5 +16,18 @@ def createTable():
     connection.close()
 
 
-createTable()
+def selectTable():
+    connection = sqlite3.connect("login.db")
+    result = connection.execute("SELECT * FROM USER")
+    
+    for data in result:
+        print("Username: ",data[0])
+        print("Email: ",data[1])
+        print("Password: ",data[2])
+
+    connection.close()
+
+
+#creatTable()
+selectTable()
    
