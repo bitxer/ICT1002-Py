@@ -1,0 +1,9 @@
+<RCC>
+  <qresource prefix="newPrefix">
+    <file>lock.png</file>
+    <file>Q7XTON.jpg</file>
+    <file>male.png</file>
+    <file>Digital-Forensics2-m-754x440.jpg</file>
+    <file>Digital-Forensics-m-754x440.jpg</file>
+  </qresource>
+</RCC>
