@@ -30,7 +30,7 @@ def generateisatk():
 
 def generateatks(atk):
     if atk == 1:
-        print(choice(list(atks.values())))
+        # print(choice(list(atks.values())))
         return choice(list(atks.values()))
     else:
         return 'Benign'

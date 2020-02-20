@@ -1,6 +1,6 @@
 from PyQt5 import uic, QtWidgets
-from PyQt5.QtWidgets import QMainWindow, QApplication, QTableWidget,QTableWidgetItem, QHeaderView, QGraphicsSimpleTextItem, QListWidget, QPushButton, QComboBox, QLineEdit
-from PyQt5.QtChart import QChart, QChartView, QPieSeries, QPieSlice
+from PyQt5.QtWidgets import QMainWindow, QApplication, QTableWidget,QTableWidgetItem, QHeaderView, QGraphicsSimpleTextItem, QListWidget, QPushButton, QComboBox, QLineEdit, QGraphicsView
+from PyQt5.QtChart import QChart, QChartView, QPieSeries, QPieSlice, QLineSeries, QDateTimeAxis, QDateTimeAxis, QValueAxis
 from PyQt5.QtGui import QPainter, QPen, QMouseEvent
 from PyQt5.QtCore import Qt
 from devtools import filedata
@@ -8,10 +8,10 @@ import ast
 import sys
 from PyQt5.QtCore import QFile, QTextStream
 from PyQt5.QtWidgets import QApplication
-import breeze_resources
 import time
 import pandas as pd
-import qdarkstyle
+import datetime
+
 
 class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
@@ -44,6 +44,59 @@ class MainWindow(QMainWindow):
 
         self.searchbtn = self.findChild(QPushButton, "searchbtn")
         self.searchbtn.clicked.connect(self.search)
+        # LineChart(self.data.getAtkTime(), 'Attacks over Time')
+
+        self.graph()
+
+    def graph(self):
+        self.attackgraph = self.findChild(QChartView, "attackgraph")
+        graph = QChart()
+        graph.setAnimationOptions(QChart.AllAnimations)
+        graph.setTitle("Attack over Time")
+        graph.legend().hide()
+
+        series = QLineSeries()
+
+
+        # Filling QLineSeries
+        for val in self.data.getAtkTime():
+            print("_____")
+            print(val)
+            print("_____")
+
+            series.append(val,10)
+
+        graph.addSeries(series)
+
+        # Setting X-axis
+        self.axis_x = QDateTimeAxis()
+        self.axis_x.setTickCount(10)
+        self.axis_x.setFormat("dd.MM (h:mm)")
+        self.axis_x.setTitleText("Date")
+        graph.addAxis(self.axis_x, Qt.AlignBottom)
+        series.attachAxis(self.axis_x)
+        # Setting Y-axis
+        self.axis_y = QValueAxis()
+        self.axis_y.setTickCount(10)
+        self.axis_y.setLabelFormat("%.2f")
+        self.axis_y.setTitleText("Attacks")
+        graph.addAxis(self.axis_y, Qt.AlignLeft)
+        series.attachAxis(self.axis_y)
+
+        self.attackgraph.setChart(graph)
+        # self.piechart.setRenderHint(QPainter.Antialiasing)
+
+
+
+        # Getting the color from the QChart to use it on the QTableView
+        # self.model.color = "{}".format(self.series.pen().color().name())
+
+        # series = QLineSeries()
+        # atkdata = self.data.getAtkTime()
+        
+
+        # self.attackgraph.setChart(series)
+
 
     def search(self):
         self.isatksearch = self.findChild(QComboBox, "isAtk").currentText()
@@ -109,6 +162,8 @@ class DataHandler:
             'Atk' : {},
         }
 
+        atktime = []
+
         protoports = {}
         series = QPieSeries()
 
@@ -145,13 +200,23 @@ class DataHandler:
             else:
                 protoports[v['Protocol'] + ':' + str(v['Port'])] += 1
 
+            # v = time.strftime('%m%y', time.gmtime(v['Time']))
+            atktime.append(v['Time'])
+            # if v not in atktime:
+            #     atktime[v] = 1
+            # else:
+            #     atktime[v] += 1
+
+            
+
         for atk, val in summary['Atk'].items():
-            print(atk)
+            # print(atk)
             series.append(str(atk), int(val))
 
         self.summary = summary
         self.series = series
         self.protoports = protoports
+        self.atktime = atktime
 
     def topIPs(self):
         top = sorted(self.summary['IP'], key=self.summary['IP'].get, reverse=True)
@@ -183,6 +248,9 @@ class DataHandler:
 
     def getTopProtocols(self):
         return self.protoports
+    
+    def getAtkTime(self):
+        return self.atktime
 
 class DataTable:
     def __init__(self, tableobj, tabledata):
@@ -250,6 +318,23 @@ class DataTable:
                         srchflag = 1
                         self.tableobj.setRowHidden(rowIndex, True)
 
+
+# class LineChart:
+#     def __init__(self, data, title):
+#         self.data = data
+#         self.title = title
+#         self.create()
+
+#     def create(self):
+#         series = QLineSeries()
+#         print(self.data)
+
+#         QDateTimeAxis.format()
+
+        # for x in range(0, len(self.data.)):
+        # series.append()
+
+
 class Piechart:
     def __init__(self, chartseries, title):
         self.chartseries = chartseries
@@ -278,11 +363,6 @@ class Piechart:
 def main():
     app = QApplication(sys.argv)
 
-    # themefile = QFile(":/dark.qss")
-    # themefile.open(QFile.ReadOnly | QFile.Text)
-    # stream = QTextStream(themefile)
-    # app.setStyleSheet(stream.readAll())
-    # app.setStyleSheet(qdarkstyle.load_stylesheet())
     main = MainWindow()
     main.showMaximized()
     # main.show()
