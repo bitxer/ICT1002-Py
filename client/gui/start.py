@@ -1,5 +1,5 @@
 from PyQt5 import uic, QtWidgets
-from PyQt5.QtWidgets import QMainWindow, QApplication, QTableWidget,QTableWidgetItem, QHeaderView, QGraphicsSimpleTextItem, QListWidget
+from PyQt5.QtWidgets import QMainWindow, QApplication, QTableWidget,QTableWidgetItem, QHeaderView, QGraphicsSimpleTextItem, QListWidget, QPushButton, QComboBox, QLineEdit
 from PyQt5.QtChart import QChart, QChartView, QPieSeries, QPieSlice
 from PyQt5.QtGui import QPainter, QPen, QMouseEvent
 from PyQt5.QtCore import Qt
@@ -11,6 +11,7 @@ from PyQt5.QtWidgets import QApplication
 import breeze_resources
 import time
 import pandas as pd
+import qdarkstyle
 
 class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
@@ -41,6 +42,25 @@ class MainWindow(QMainWindow):
         # print(pd.DataFrame(self.data.topIPs(), index=[0]).transform)
         # self.displaytable("toplist", pd.DataFrame(self.data.topIPs(), index=[0]))
 
+        self.searchbtn = self.findChild(QPushButton, "searchbtn")
+        self.searchbtn.clicked.connect(self.search)
+
+    def search(self):
+        self.isatksearch = self.findChild(QComboBox, "isAtk").currentText()
+        self.ipsearch = self.findChild(QLineEdit, "ipaddr").text()
+        self.protocolsearch = self.findChild(QLineEdit, "protocol").text()
+        self.portsearch = self.findChild(QLineEdit, "port").text()
+        self.atksearch = self.findChild(QLineEdit, "atk").text()
+        self.timesearch = self.findChild(QLineEdit, "time").text()
+
+        searchquery = [self.isatksearch, self.ipsearch, self.protocolsearch,self.portsearch, self.atksearch, self.timesearch]
+
+        print(searchquery)
+
+        table = self.findChild(QTableWidget, "datatable")
+        table.setSortingEnabled(True)
+        DataTable(table, self.data.getData()).search(searchquery)
+
     def displaychart(self, widgetname, chartseries, header):
         self.piechart = self.findChild(QChartView, widgetname)
         chartdata = Piechart(chartseries, header).create()
@@ -65,15 +85,13 @@ class MainWindow(QMainWindow):
         table = self.findChild(QTableWidget, widgetname)
         table.setSortingEnabled(True)
         DataTable(table, data).create()
-    
+
     def addItem(self):
         fileName, _ = QtWidgets.QFileDialog.getOpenFileName(None, "Select Text File", "", "Text Files (*.txt)")
         print (fileName)
-        
+
     def exit(self):
         sys.exit()
-
-
 
 class DataHandler:
     def __init__(self, data):
@@ -97,7 +115,7 @@ class DataHandler:
         series = QPieSeries()
 
         counter = 0
-        
+
         for k,v in self.data.items():
             if v['IsAtk'] == 1:
                 summary['AtkCount'] = summary['AtkCount'] + 1
@@ -177,7 +195,7 @@ class DataTable:
     def create(self):
         self.tableobj.setColumnCount(len(self.tabledata.values))
         self.tableobj.setRowCount(len(self.tabledata.keys()))
-        self.tableobj.setHorizontalHeaderLabels(["Is Attack", "Attack", "IP Address", "Protocol", "Port", "Time"])
+        self.tableobj.setHorizontalHeaderLabels(["Is Attack", "IP Address", "Protocol", "Port", "Attack", "Time"])
         for k,v in self.tabledata.items():
             index = k
             rowcount = 0
@@ -192,7 +210,45 @@ class DataTable:
                 self.tableobj.setItem(int(index), rowcount, QTableWidgetItem(str(v)))
                 rowcount += 1
 
-        
+    def search(self, query):
+        for rowIndex in range(self.tableobj.rowCount()):
+            srchflag = 0
+            for column in range(self.tableobj.columnCount()):
+                twItem = self.tableobj.item(rowIndex, column)
+                if column != 4 and column != 5:
+                    if query[column] != '':
+                        if column == 0:
+                            if query[column] == '-':
+                                self.tableobj.setRowHidden(rowIndex, False)
+                            else:
+                                if twItem.text().lower() == query[column].lower():
+                                    if srchflag == 0:
+                                        self.tableobj.setRowHidden(rowIndex, False)
+                                    else:
+                                        self.tableobj.setRowHidden(rowIndex, True)
+                                else:
+                                    srchflag = 1
+                                    self.tableobj.setRowHidden(rowIndex, True)
+                        else:
+                            if twItem.text().lower() == query[column].lower():
+                                if srchflag == 0:
+                                    self.tableobj.setRowHidden(rowIndex, False)
+                                else:
+                                    self.tableobj.setRowHidden(rowIndex, True)
+                            else:
+                                srchflag = 1
+                                self.tableobj.setRowHidden(rowIndex, True)
+                else:
+                    print(query[column])
+                    print(twItem.text())
+                    if twItem.text().lower().find(query[column].lower()) != -1:
+                        if srchflag == 0:
+                            self.tableobj.setRowHidden(rowIndex, False)
+                        else:
+                            self.tableobj.setRowHidden(rowIndex, True)
+                    else:
+                        srchflag = 1
+                        self.tableobj.setRowHidden(rowIndex, True)
 
 class Piechart:
     def __init__(self, chartseries, title):
@@ -221,10 +277,12 @@ class Piechart:
 
 def main():
     app = QApplication(sys.argv)
-    themefile = QFile(":/dark.qss")
-    themefile.open(QFile.ReadOnly | QFile.Text)
-    stream = QTextStream(themefile)
-    app.setStyleSheet(stream.readAll())
+
+    # themefile = QFile(":/dark.qss")
+    # themefile.open(QFile.ReadOnly | QFile.Text)
+    # stream = QTextStream(themefile)
+    # app.setStyleSheet(stream.readAll())
+    # app.setStyleSheet(qdarkstyle.load_stylesheet())
     main = MainWindow()
     main.showMaximized()
     # main.show()
