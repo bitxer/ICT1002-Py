@@ -285,21 +285,8 @@ class DataTable:
             srchflag = 0
             for column in range(self.tableobj.columnCount()):
                 twItem = self.tableobj.item(rowIndex, column)
-                if column != 4 and column != 5:
+                if column == 3:
                     if query[column] != '':
-                        if column == 0:
-                            if query[column] == '-':
-                                self.tableobj.setRowHidden(rowIndex, False)
-                            else:
-                                if twItem.text().lower() == query[column].lower():
-                                    if srchflag == 0:
-                                        self.tableobj.setRowHidden(rowIndex, False)
-                                    else:
-                                        self.tableobj.setRowHidden(rowIndex, True)
-                                else:
-                                    srchflag = 1
-                                    self.tableobj.setRowHidden(rowIndex, True)
-                        else:
                             if twItem.text().lower() == query[column].lower():
                                 if srchflag == 0:
                                     self.tableobj.setRowHidden(rowIndex, False)
@@ -309,14 +296,27 @@ class DataTable:
                                 srchflag = 1
                                 self.tableobj.setRowHidden(rowIndex, True)
                 else:
-                    if twItem.text().lower().find(query[column].lower()) != -1:
-                        if srchflag == 0:
+                    if column == 0:
+                        if query[column] == '-':
                             self.tableobj.setRowHidden(rowIndex, False)
                         else:
-                            self.tableobj.setRowHidden(rowIndex, True)
+                            if twItem.text().lower() == query[column].lower():
+                                if srchflag == 0:
+                                    self.tableobj.setRowHidden(rowIndex, False)
+                                else:
+                                    self.tableobj.setRowHidden(rowIndex, True)
+                            else:
+                                srchflag = 1
+                                self.tableobj.setRowHidden(rowIndex, True)
                     else:
-                        srchflag = 1
-                        self.tableobj.setRowHidden(rowIndex, True)
+                        if twItem.text().lower().find(query[column].lower()) != -1:
+                            if srchflag == 0:
+                                self.tableobj.setRowHidden(rowIndex, False)
+                            else:
+                                self.tableobj.setRowHidden(rowIndex, True)
+                        else:
+                            srchflag = 1
+                            self.tableobj.setRowHidden(rowIndex, True)
 
 
 # class LineChart:
