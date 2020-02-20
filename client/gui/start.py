@@ -55,7 +55,7 @@ class MainWindow(QMainWindow):
 
         searchquery = [self.isatksearch, self.ipsearch, self.protocolsearch,self.portsearch, self.atksearch, self.timesearch]
 
-        print(searchquery)
+        # print(searchquery)
 
         table = self.findChild(QTableWidget, "datatable")
         table.setSortingEnabled(True)
@@ -110,8 +110,6 @@ class DataHandler:
         }
 
         protoports = {}
-        # print(self.data)
-
         series = QPieSeries()
 
         counter = 0
@@ -148,7 +146,8 @@ class DataHandler:
                 protoports[v['Protocol'] + ':' + str(v['Port'])] += 1
 
         for atk, val in summary['Atk'].items():
-            series.append(atk, val)
+            print(atk)
+            series.append(str(atk), int(val))
 
         self.summary = summary
         self.series = series
@@ -202,7 +201,10 @@ class DataTable:
 
             for k,v in v.items():
                 if k == 'IsAtk':
-                    v = 'Yes'
+                    if v == 1:
+                        v = 'Yes'
+                    else:
+                        v = 'No'
 
                 if k == 'Time':
                     v = time.strftime('%m/%d/%Y %H:%M:%S', time.gmtime(v))
@@ -239,8 +241,6 @@ class DataTable:
                                 srchflag = 1
                                 self.tableobj.setRowHidden(rowIndex, True)
                 else:
-                    print(query[column])
-                    print(twItem.text())
                     if twItem.text().lower().find(query[column].lower()) != -1:
                         if srchflag == 0:
                             self.tableobj.setRowHidden(rowIndex, False)

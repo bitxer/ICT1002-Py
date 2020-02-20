@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>989</width>
-    <height>913</height>
+    <width>1200</width>
+    <height>1000</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -15,6 +15,12 @@
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1200</width>
+    <height>1000</height>
+   </size>
   </property>
   <property name="font">
    <font>
@@ -37,8 +43,8 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>-886</y>
-         <width>954</width>
+         <y>0</y>
+         <width>1163</width>
          <height>1709</height>
         </rect>
        </property>
@@ -544,8 +550,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>989</width>
-     <height>27</height>
+     <width>1200</width>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
