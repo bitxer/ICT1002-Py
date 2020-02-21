@@ -42,9 +42,19 @@ class MainWindow(QMainWindow):
         # print(pd.DataFrame(self.data.topIPs(), index=[0]).transform)
         # self.displaytable("toplist", pd.DataFrame(self.data.topIPs(), index=[0]))
 
+        self.isatksearch = self.findChild(QComboBox, "isAtk")
+        self.ipsearch = self.findChild(QLineEdit, "ipaddr")
+        self.protocolsearch = self.findChild(QLineEdit, "protocol")
+        self.portsearch = self.findChild(QLineEdit, "port")
+        self.atksearch = self.findChild(QLineEdit, "atk")
+        self.timesearch = self.findChild(QLineEdit, "time")
+
         self.searchbtn = self.findChild(QPushButton, "searchbtn")
         self.searchbtn.clicked.connect(self.search)
         # LineChart(self.data.getAtkTime(), 'Attacks over Time')
+
+        self.clearbtn = self.findChild(QPushButton, "clearbtn")
+        self.clearbtn.clicked.connect(self.clear)
 
         self.graph()
 
@@ -60,9 +70,9 @@ class MainWindow(QMainWindow):
 
         # Filling QLineSeries
         for val in self.data.getAtkTime():
-            print("_____")
-            print(val)
-            print("_____")
+            # print("_____")
+            # print(val)
+            # print("_____")
 
             series.append(val,10)
 
@@ -97,18 +107,23 @@ class MainWindow(QMainWindow):
 
         # self.attackgraph.setChart(series)
 
+    def clear(self):
+        
+        self.isatksearch.setCurrentIndex(0)
+        self.ipsearch.clear()
+        self.protocolsearch.clear()
+        self.portsearch.clear()
+        self.atksearch.clear()
+        self.timesearch.clear()
+
+        table = self.findChild(QTableWidget, "datatable")
+        table.setSortingEnabled(True)
+        DataTable(table, self.data.getData()).search(query=None)
 
     def search(self):
-        self.isatksearch = self.findChild(QComboBox, "isAtk").currentText()
-        self.ipsearch = self.findChild(QLineEdit, "ipaddr").text()
-        self.protocolsearch = self.findChild(QLineEdit, "protocol").text()
-        self.portsearch = self.findChild(QLineEdit, "port").text()
-        self.atksearch = self.findChild(QLineEdit, "atk").text()
-        self.timesearch = self.findChild(QLineEdit, "time").text()
+        
 
-        searchquery = [self.isatksearch, self.ipsearch, self.protocolsearch,self.portsearch, self.atksearch, self.timesearch]
-
-        # print(searchquery)
+        searchquery = [self.isatksearch.currentText(), self.ipsearch.text(), self.protocolsearch.text(),self.portsearch.text(), self.atksearch.text(), self.timesearch.text()]
 
         table = self.findChild(QTableWidget, "datatable")
         table.setSortingEnabled(True)
@@ -285,38 +300,42 @@ class DataTable:
             srchflag = 0
             for column in range(self.tableobj.columnCount()):
                 twItem = self.tableobj.item(rowIndex, column)
-                if column == 3:
-                    if query[column] != '':
-                            if twItem.text().lower() == query[column].lower():
-                                if srchflag == 0:
-                                    self.tableobj.setRowHidden(rowIndex, False)
-                                else:
-                                    self.tableobj.setRowHidden(rowIndex, True)
-                            else:
-                                srchflag = 1
-                                self.tableobj.setRowHidden(rowIndex, True)
+
+                if query is None:
+                    self.tableobj.setRowHidden(rowIndex, False)
                 else:
-                    if column == 0:
-                        if query[column] == '-':
-                            self.tableobj.setRowHidden(rowIndex, False)
-                        else:
-                            if twItem.text().lower() == query[column].lower():
-                                if srchflag == 0:
-                                    self.tableobj.setRowHidden(rowIndex, False)
+                    if column == 3:
+                        if query[column] != '':
+                                if twItem.text().lower() == query[column].lower():
+                                    if srchflag == 0:
+                                        self.tableobj.setRowHidden(rowIndex, False)
+                                    else:
+                                        self.tableobj.setRowHidden(rowIndex, True)
                                 else:
+                                    srchflag = 1
                                     self.tableobj.setRowHidden(rowIndex, True)
-                            else:
-                                srchflag = 1
-                                self.tableobj.setRowHidden(rowIndex, True)
                     else:
-                        if twItem.text().lower().find(query[column].lower()) != -1:
-                            if srchflag == 0:
+                        if column == 0:
+                            if query[column] == '-':
                                 self.tableobj.setRowHidden(rowIndex, False)
                             else:
-                                self.tableobj.setRowHidden(rowIndex, True)
+                                if twItem.text().lower() == query[column].lower():
+                                    if srchflag == 0:
+                                        self.tableobj.setRowHidden(rowIndex, False)
+                                    else:
+                                        self.tableobj.setRowHidden(rowIndex, True)
+                                else:
+                                    srchflag = 1
+                                    self.tableobj.setRowHidden(rowIndex, True)
                         else:
-                            srchflag = 1
-                            self.tableobj.setRowHidden(rowIndex, True)
+                            if twItem.text().lower().find(query[column].lower()) != -1:
+                                if srchflag == 0:
+                                    self.tableobj.setRowHidden(rowIndex, False)
+                                else:
+                                    self.tableobj.setRowHidden(rowIndex, True)
+                            else:
+                                srchflag = 1
+                                self.tableobj.setRowHidden(rowIndex, True)
 
 
 # class LineChart:
