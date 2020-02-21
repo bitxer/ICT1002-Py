@@ -1,11 +1,11 @@
 import ast
 import csv
-import sys
+import sys, os
 
 import pandas as pd
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtChart import QChartView
-from PyQt5.QtCore import QFile, QTextStream
+from PyQt5.QtCore import QFile, QTextStream, Qt
 from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import (QApplication, QComboBox, QHeaderView, QLineEdit,
                              QMainWindow, QPushButton, QTableWidget,
@@ -98,7 +98,6 @@ class MainWindow(QMainWindow):
         table.setHorizontalHeaderLabels(header)
         index = 0
         for k,v in data.items():
-            # print(k,v)
             table.setItem(int(index),0, QTableWidgetItem(k))
             table.setItem(int(index),1, QTableWidgetItem(str(v)))
             index += 1
@@ -159,13 +158,11 @@ class MainWindow(QMainWindow):
         msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
         msgBox.exec()
 
-
     def exit(self):
         sys.exit()
 
 def main():
     app = QApplication(sys.argv)
-
     main = MainWindow()
     main.showMaximized()
     sys.exit(app.exec_())
