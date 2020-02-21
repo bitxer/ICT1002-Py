@@ -1,16 +1,20 @@
 import ast
-import sys
-from PyQt5 import uic, QtWidgets
-from PyQt5.QtWidgets import QMainWindow, QApplication, QTableWidget, QTableWidgetItem, QHeaderView, QPushButton, QComboBox, QLineEdit
-from PyQt5.QtChart import QChartView
-from PyQt5.QtGui import QPainter
-from PyQt5.QtCore import QFile, QTextStream
-from devtools import filedata
-import pandas as pd
 import csv
-from datahandler import DataHandler
-from logs import DataTable
+import sys
+
+import pandas as pd
+from PyQt5 import QtWidgets, uic
+from PyQt5.QtChart import QChartView
+from PyQt5.QtCore import QFile, QTextStream
+from PyQt5.QtGui import QPainter
+from PyQt5.QtWidgets import (QApplication, QComboBox, QHeaderView, QLineEdit,
+                             QMainWindow, QPushButton, QTableWidget,
+                             QTableWidgetItem)
+
 from charts import Piechart
+from datahandler import DataHandler
+from devtools import filedata
+from logs import DataTable
 
 
 class MainWindow(QMainWindow):

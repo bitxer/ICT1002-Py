@@ -1,5 +1,6 @@
 from PyQt5.QtChart import QPieSeries
 
+
 class DataHandler:
     def __init__(self, data):
         self.data = data

@@ -1,5 +1,7 @@
-from PyQt5.QtWidgets import QHeaderView, QTableWidgetItem
 import time
+
+from PyQt5.QtWidgets import QHeaderView, QTableWidgetItem
+
 
 class DataTable:
     def __init__(self, tableobj, tabledata):
