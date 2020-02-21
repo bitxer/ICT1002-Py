@@ -1,13 +1,11 @@
+import ast
+import sys
 from PyQt5 import uic, QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QApplication, QTableWidget,QTableWidgetItem, QHeaderView, QGraphicsSimpleTextItem, QListWidget, QPushButton, QComboBox, QLineEdit, QGraphicsView
 from PyQt5.QtChart import QChart, QChartView, QPieSeries, QPieSlice, QLineSeries, QDateTimeAxis, QDateTimeAxis, QValueAxis
-from PyQt5.QtGui import QPainter, QPen, QMouseEvent
-from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPainter
+from PyQt5.QtCore import Qt, QFile, QTextStream
 from devtools import filedata
-import ast
-import sys
-from PyQt5.QtCore import QFile, QTextStream
-from PyQt5.QtWidgets import QApplication
 import time
 import pandas as pd
 import datetime
@@ -22,7 +20,6 @@ class MainWindow(QMainWindow):
         rawdata = filedata().strip("\n")
         rawdata = ast.literal_eval(rawdata)
 
-        # data
         df = pd.DataFrame.from_dict(rawdata)
 
         self.data = DataHandler(df)

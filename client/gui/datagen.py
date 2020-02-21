@@ -50,7 +50,7 @@ def generatetime():
 def run():
     randomdict = {}
 
-    for i in range(0, 100):
+    for i in range(0, 1000):
         isatk = generateisatk()
         randomdict[i] = {'IsAtk': isatk , 'IP': generateip(), 'Protocol': generateprotocols(), 'Port': generateport(), 'Atk': generateatks(isatk), 'Time': generatetime() }
 
