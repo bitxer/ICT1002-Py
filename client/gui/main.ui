@@ -596,6 +596,7 @@
      </property>
      <addaction name="separator"/>
      <addaction name="actionSummary"/>
+     <addaction name="actionTableDetails"/>
     </widget>
     <addaction name="actionUpload"/>
     <addaction name="menuExport"/>
@@ -643,6 +644,11 @@
   <action name="actionSummary">
    <property name="text">
     <string>Summary</string>
+   </property>
+  </action>
+  <action name="actionTableDetails">
+   <property name="text">
+    <string>Table Details</string>
    </property>
   </action>
  </widget>
