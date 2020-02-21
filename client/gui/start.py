@@ -9,6 +9,7 @@ from devtools import filedata
 import time
 import pandas as pd
 import datetime
+import csv
 
 
 class MainWindow(QMainWindow):
@@ -167,13 +168,13 @@ class MainWindow(QMainWindow):
         ip = self.data.getTopIPs()
         fileName = QtWidgets.QFileDialog.getSaveFileName(None,  "Save CSV File", "", "CSV Files (*.csv)")
         if fileName[0]:
-            with open(fileName[0], 'w') as f:
-                f.write('Protocol & Ports, Counts\n')
-                for key in protocol.keys():
-                    f.write("%s,%s\n"%(key,protocol[key]))
-                f.write('IP Address, Counts\n')
-                for key in ip.keys():
-                    f.write("%s,%s\n"%(key,ip[key]))
+            with open(fileName[0], 'w') as csv_file:
+                fieldnames = ['Protocol & Ports', 'Counts', 'IP Address', 'Counts']
+                writer = csv.writer(csv_file,lineterminator='\n')
+                writer.writerow(fieldnames)
+
+                for proto, ips in zip(protocol.items(), ip.items()):
+                    writer.writerow(proto + ips)
             self.showMessageBox('File Exported',"File Exported successfully")
         else:
             self.showMessageBox('File not Exported',"File not Exported successfully")
