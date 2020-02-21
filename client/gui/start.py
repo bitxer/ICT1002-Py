@@ -31,7 +31,16 @@ class MainWindow(QMainWindow):
         
         # upload
         self.actionUpload.triggered.connect(self.addItem)
+        
+        # Exit
         self.actionExit.triggered.connect(self.exit)
+        
+         # Export IP 
+        self.actionTop_5_IPs_Hits.triggered.connect(self.ExportIP)
+        
+        # Export Protocols
+        self.actionTop_5_Protocols_Hits.triggered.connect(self.ExportProtocol)
+        
 
         # displays
         self.displaychart("attackchart", self.chartseries, "Attack Types")
@@ -157,6 +166,41 @@ class MainWindow(QMainWindow):
     def addItem(self):
         fileName, _ = QtWidgets.QFileDialog.getOpenFileName(None, "Select Text File", "", "Text Files (*.txt)")
         print (fileName)
+        
+        
+    def ExportIP(self):
+        output = self.data.getTopIPs()
+        fileName = QtWidgets.QFileDialog.getSaveFileName(None,  "Save CSV File", "", "CSV Files (*.csv)")
+        if fileName[0]:
+            with open(fileName[0], 'w') as f:
+                f.write('IP Address, Counts\n')
+                for key in output.keys():
+                    f.write("%s,%s\n"%(key,output[key]))
+            self.showMessageBox('File Exported',"File Exported successfully")
+        else:
+            self.showMessageBox('File not Exported',"File not Exported successfully")
+        
+        
+    def ExportProtocol(self):
+        output = self.data.getTopProtocols()
+        fileName = QtWidgets.QFileDialog.getSaveFileName(None,  "Save CSV File", "", "CSV Files (*.csv)")
+        if fileName[0]:
+            with open(fileName[0], 'w') as f:
+                f.write('Protocol & Ports, Counts\n')
+                for key in output.keys():
+                    f.write("%s,%s\n"%(key,output[key]))
+            self.showMessageBox('File Exported',"File Exported successfully")
+        else:
+            self.showMessageBox('File not Exported',"File not Exported successfully")
+            
+    def showMessageBox(self,title,message):
+        msgBox = QtWidgets.QMessageBox()
+        msgBox.setIcon(QtWidgets.QMessageBox.Information)
+        msgBox.setWindowTitle(title)
+        msgBox.setText(message)
+        msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
+        msgBox.exec()
+
 
     def exit(self):
         sys.exit()
