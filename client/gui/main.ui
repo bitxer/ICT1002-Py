@@ -595,8 +595,6 @@
       <string>Export</string>
      </property>
      <addaction name="separator"/>
-     <addaction name="actionTop_5_IPs_Hits"/>
-     <addaction name="actionTop_5_Protocols_Hits"/>
      <addaction name="actionSummary"/>
     </widget>
     <addaction name="actionUpload"/>

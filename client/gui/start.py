@@ -35,11 +35,8 @@ class MainWindow(QMainWindow):
         # Exit
         self.actionExit.triggered.connect(self.exit)
         
-         # Export IP 
-        self.actionTop_5_IPs_Hits.triggered.connect(self.ExportIP)
-        
-        # Export Protocols
-        self.actionTop_5_Protocols_Hits.triggered.connect(self.ExportProtocol)
+        # Export Protocols and IP
+        self.actionSummary.triggered.connect(self.Summary)
         
 
         # displays
@@ -167,28 +164,19 @@ class MainWindow(QMainWindow):
         fileName, _ = QtWidgets.QFileDialog.getOpenFileName(None, "Select Text File", "", "Text Files (*.txt)")
         print (fileName)
         
-        
-    def ExportIP(self):
-        output = self.data.getTopIPs()
-        fileName = QtWidgets.QFileDialog.getSaveFileName(None,  "Save CSV File", "", "CSV Files (*.csv)")
-        if fileName[0]:
-            with open(fileName[0], 'w') as f:
-                f.write('IP Address, Counts\n')
-                for key in output.keys():
-                    f.write("%s,%s\n"%(key,output[key]))
-            self.showMessageBox('File Exported',"File Exported successfully")
-        else:
-            self.showMessageBox('File not Exported',"File not Exported successfully")
-        
-        
-    def ExportProtocol(self):
-        output = self.data.getTopProtocols()
+            
+    def Summary(self):
+        protocol = self.data.getTopProtocols()
+        ip = self.data.getTopIPs()
         fileName = QtWidgets.QFileDialog.getSaveFileName(None,  "Save CSV File", "", "CSV Files (*.csv)")
         if fileName[0]:
             with open(fileName[0], 'w') as f:
                 f.write('Protocol & Ports, Counts\n')
-                for key in output.keys():
-                    f.write("%s,%s\n"%(key,output[key]))
+                for key in protocol.keys():
+                    f.write("%s,%s\n"%(key,protocol[key]))
+                f.write('IP Address, Counts\n')
+                for key in ip.keys():
+                    f.write("%s,%s\n"%(key,ip[key]))
             self.showMessageBox('File Exported',"File Exported successfully")
         else:
             self.showMessageBox('File not Exported',"File not Exported successfully")
