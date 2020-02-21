@@ -39,6 +39,9 @@ class MainWindow(QMainWindow):
         # Export Protocols and IP
         self.actionSummary.triggered.connect(self.Summary)
         
+        # Exporting table details
+        self.actionTableDetails.triggered.connect(self.TableDetails)
+        
 
         # displays
         self.displaychart("attackchart", self.chartseries, "Attack Types")
@@ -181,6 +184,28 @@ class MainWindow(QMainWindow):
             self.showMessageBox('File Exported',"File Exported successfully")
         else:
             self.showMessageBox('File not Exported',"File not Exported successfully")
+            
+            
+    def TableDetails(self):
+        fileName = QtWidgets.QFileDialog.getSaveFileName(None,  "Save CSV File", "", "CSV Files (*.csv)")
+        if fileName[0]:
+            with open(fileName[0], 'w') as csv_file:
+                fieldnames = ['IS Attack', 'IP Address', 'Protocol', 'Port', 'Attack','Time']
+                writer = csv.writer(csv_file, lineterminator='\n')   
+                writer.writerow(fieldnames)
+                for row in range(self.datatable.rowCount()):
+                    rowdata = []
+                    for column in range(self.datatable.columnCount()):
+                        item = self.datatable.item(row, column)
+                        if item is not None:                        
+                            rowdata.append(item.text())                  
+                        else:
+                            rowdata.append('')
+                    writer.writerow(rowdata)
+            self.showMessageBox('File Exported',"File Exported successfully")
+        else:
+            self.showMessageBox('File not Exported',"File not Exported successfully")
+    
             
     def showMessageBox(self,title,message):
         msgBox = QtWidgets.QMessageBox()
