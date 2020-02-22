@@ -1,74 +1,58 @@
 import time
 
+from PyQt5.QtCore import QAbstractTableModel, QVariant
+from PyQt5.QtCore import Qt, QItemSelectionModel
 from PyQt5.QtWidgets import QHeaderView, QTableWidgetItem
+import pandas as pd
 
+class PandasModel(QAbstractTableModel):
+    header = ["Is Attack", "IP Address", "Protocol", "Port", "Attack", "Time"]
 
-class DataTable:
-    def __init__(self, tableobj, tabledata):
-        self.tableobj = tableobj
-        self.tabledata = tabledata
-        self.tableobj.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.tableobj.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
+    def __init__(self, data, parent=None, search=None):
+        QAbstractTableModel.__init__(self, parent)
+        if search is None:
+            self._data = data.transpose()
+            self._data['IsAtk'] = self._data['IsAtk'].map({1:'Yes', 0:'No'})
+            self._data['Time'] = pd.to_datetime(self._data['Time'],unit='s')
+        else:
+            self._data = data
 
-    def create(self):
-        self.tableobj.setColumnCount(len(self.tabledata.values))
-        self.tableobj.setRowCount(len(self.tabledata.keys()))
-        self.tableobj.setHorizontalHeaderLabels(["Is Attack", "IP Address", "Protocol", "Port", "Attack", "Time"])
-        for k,v in self.tabledata.items():
-            index = k
-            rowcount = 0
+    def rowCount(self, parent=None):
+        return len(self._data.values)
 
-            for k,v in v.items():
-                if k == 'IsAtk':
-                    if v == 1:
-                        v = 'Yes'
-                    else:
-                        v = 'No'
+    def columnCount(self, parent=None):
+        return self._data.columns.size
 
-                if k == 'Time':
-                    v = time.strftime('%m/%d/%Y %H:%M:%S', time.gmtime(v))
+    def headerData(self, section, orientation, role=Qt.DisplayRole):
+        if role == Qt.DisplayRole and orientation == Qt.Horizontal:
+            return self.header[section]
+        return QAbstractTableModel.headerData(self, section, orientation, role)
+    
+    def data(self, index, role=Qt.DisplayRole):
+        if index.isValid():
+            if role == Qt.DisplayRole:
+                return QVariant(str(
+                    self._data.values[index.row()][index.column()]))
+        return QVariant()
+    
+    def sort(self, Ncol, order):
+        """Sort table by given column number.
+        """
+        try:
+            self.layoutAboutToBeChanged.emit()
+            self._data = self._data.sort_values(self._data.columns[Ncol], ascending=not order)
+            self.layoutChanged.emit()
+        except Exception as e:
+            print(e)
 
-                self.tableobj.setItem(int(index), rowcount, QTableWidgetItem(str(v)))
-                rowcount += 1
+    def newsearch(self, query):
+        self.query = query
+        pdquery = ''
 
-    def search(self, query):
-        for rowIndex in range(self.tableobj.rowCount()):
-            srchflag = 0
-            for column in range(self.tableobj.columnCount()):
-                twItem = self.tableobj.item(rowIndex, column)
+        for k,v in self.query.items():
+            pdquery += 'self._data["'+str(k)+'"].str.contains("(?i)' + str(v) + '") & '
 
-                if query is None:
-                    self.tableobj.setRowHidden(rowIndex, False)
-                else:
-                    if column == 3:
-                        if query[column] != '':
-                                if twItem.text().lower() == query[column].lower():
-                                    if srchflag == 0:
-                                        self.tableobj.setRowHidden(rowIndex, False)
-                                    else:
-                                        self.tableobj.setRowHidden(rowIndex, True)
-                                else:
-                                    srchflag = 1
-                                    self.tableobj.setRowHidden(rowIndex, True)
-                    else:
-                        if column == 0:
-                            if query[column] == '-':
-                                self.tableobj.setRowHidden(rowIndex, False)
-                            else:
-                                if twItem.text().lower() == query[column].lower():
-                                    if srchflag == 0:
-                                        self.tableobj.setRowHidden(rowIndex, False)
-                                    else:
-                                        self.tableobj.setRowHidden(rowIndex, True)
-                                else:
-                                    srchflag = 1
-                                    self.tableobj.setRowHidden(rowIndex, True)
-                        else:
-                            if twItem.text().lower().find(query[column].lower()) != -1:
-                                if srchflag == 0:
-                                    self.tableobj.setRowHidden(rowIndex, False)
-                                else:
-                                    self.tableobj.setRowHidden(rowIndex, True)
-                            else:
-                                srchflag = 1
-                                self.tableobj.setRowHidden(rowIndex, True)
+        if pdquery != '':
+            pdquery = 'self._data[' + pdquery[:-3] + ']'
+            searched = eval(pdquery)
+            return searched

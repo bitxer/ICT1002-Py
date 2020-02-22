@@ -8,13 +8,13 @@ from PyQt5.QtChart import QChartView, QValueAxis, QBarCategoryAxis, QBarSet, QBa
 from PyQt5.QtCore import QFile, QTextStream, Qt
 from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import (QApplication, QComboBox, QHeaderView, QLineEdit,
-                             QMainWindow, QPushButton, QTableWidget,
+                             QMainWindow, QPushButton, QTableWidget, QTableView,
                              QTableWidgetItem)
 
 from charts import Piechart
 from datahandler import DataHandler
 from devtools import filedata
-from logs import DataTable
+from logs import PandasModel
 
 
 class MainWindow(QMainWindow):
@@ -72,17 +72,8 @@ class MainWindow(QMainWindow):
         self.atksearch.clear()
         self.timesearch.clear()
 
-        table = self.findChild(QTableWidget, "datatable")
-        table.setSortingEnabled(True)
-        DataTable(table, self.data.getData()).search(query=None)
-
-    def search(self):
-        searchquery = [self.isatksearch.currentText(), self.ipsearch.text(), self.protocolsearch.text(),self.portsearch.text(), self.atksearch.text(), self.timesearch.text()]
-
-        table = self.findChild(QTableWidget, "datatable")
-        table.setSortingEnabled(True)
-        DataTable(table, self.data.getData()).search(searchquery)
-
+        self.logtable.setModel(self.pdmdl)
+        
     def displaychart(self, widgetname, chartseries, header):
         self.piechart = self.findChild(QChartView, widgetname)
         chartdata = Piechart(chartseries, header).create()
@@ -103,9 +94,23 @@ class MainWindow(QMainWindow):
             index += 1
 
     def displaytable(self, widgetname, data):
-        table = self.findChild(QTableWidget, widgetname)
-        table.setSortingEnabled(True)
-        DataTable(table, data).create()
+        # table = self.findChild(QTableWidget, widgetname)
+        self.logtable = self.findChild(QTableView, widgetname)
+        self.logtable.setSortingEnabled(True)
+        self.pdmdl = PandasModel(data)
+        self.logtable.setModel(self.pdmdl)
+        self.logtable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.logtable.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
+    
+    def search(self):
+        searchquery = {'IsAtk': self.isatksearch.currentText(), 'IP': self.ipsearch.text(), 'Protocol': self.protocolsearch.text(), 'Port': self.portsearch.text(), 'Atk': self.atksearch.text(), 'Time': self.timesearch.text()}
+        searchquery = {k: v for k, v in searchquery.items() if v != '' and searchquery['IsAtk'] != '-'}
+        if bool(searchquery) is True:
+            search = self.pdmdl.newsearch(searchquery)
+            self.logtable.setModel(PandasModel(search, search=True))
+        else:
+            self.clear()
+
 
     def addItem(self):
         fileName, _ = QtWidgets.QFileDialog.getOpenFileName(None, "Select Text File", "", "Text Files (*.txt)")
