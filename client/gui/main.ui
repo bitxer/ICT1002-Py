@@ -43,9 +43,9 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>0</y>
-         <width>1155</width>
-         <height>1732</height>
+         <y>-770</y>
+         <width>1163</width>
+         <height>2309</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -106,7 +106,7 @@
                </property>
                <property name="font">
                 <font>
-                 <pointsize>12</pointsize>
+                 <pointsize>24</pointsize>
                  <weight>75</weight>
                  <bold>true</bold>
                 </font>
@@ -507,7 +507,7 @@
           <item>
            <widget class="QTableWidget" name="datatable">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
@@ -515,13 +515,13 @@
             <property name="minimumSize">
              <size>
               <width>800</width>
-              <height>400</height>
+              <height>1000</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
               <width>16777215</width>
-              <height>1000</height>
+              <height>3000</height>
              </size>
             </property>
             <property name="font">
@@ -530,6 +530,9 @@
               <weight>75</weight>
               <bold>true</bold>
              </font>
+            </property>
+            <property name="sizeAdjustPolicy">
+             <enum>QAbstractScrollArea::AdjustToContents</enum>
             </property>
             <property name="editTriggers">
              <set>QAbstractItemView::NoEditTriggers</set>
@@ -583,7 +586,7 @@
      <x>0</x>
      <y>0</y>
      <width>1200</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

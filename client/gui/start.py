@@ -4,7 +4,7 @@ import sys, os
 
 import pandas as pd
 from PyQt5 import QtWidgets, uic
-from PyQt5.QtChart import QChartView
+from PyQt5.QtChart import QChartView, QValueAxis, QBarCategoryAxis, QBarSet, QBarSeries
 from PyQt5.QtCore import QFile, QTextStream, Qt
 from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import (QApplication, QComboBox, QHeaderView, QLineEdit,

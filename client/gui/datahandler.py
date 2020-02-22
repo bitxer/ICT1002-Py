@@ -9,57 +9,22 @@ class DataHandler:
         self.topProtocols()
 
     def process(self):
-        summary = {
-            'AtkCount' : 0,
-            'IP': {},
-            'Protocol': {},
-            'Port': {},
-            'Atk' : {},
+        self.summary = {
+            'AtkCount' : self.data.loc['IsAtk'].value_counts()[1],
+            'IP': self.data.loc['IP'].value_counts().to_dict(),
+            'Protocol': self.data.loc['Protocol'].value_counts().to_dict(),
+            'Port': self.data.loc['Port'].value_counts(),
+            'Atk' : self.data.loc['Atk'].value_counts(),
         }
 
-        atktime = []
-
-        protoports = {}
         series = QPieSeries()
 
-        for k,v in self.data.items():
-            if v['IsAtk'] == 1:
-                summary['AtkCount'] = summary['AtkCount'] + 1
-
-            if v['Atk'] not in summary['Atk']:
-                summary['Atk'][v['Atk']] = 1
-            else:
-                summary['Atk'][v['Atk']] += 1
-
-            if v['IP'] not in summary['IP']:
-                summary['IP'][v['IP']] = 1
-            else:
-                summary['IP'][v['IP']] += 1
-
-            if v['Protocol'] not in summary['Protocol']:
-                summary['Protocol'][v['Protocol']] = 1
-            else:
-                summary['Protocol'][v['Protocol']] += 1
-
-            if v['Port'] not in summary['Port']:
-                summary['Port'][v['Port']] = 1
-            else:
-                summary['Port'][v['Port']] += 1
-
-            if v['Protocol'] + ':' + str(v['Port']) not in protoports:
-                protoports[v['Protocol'] + ':' + str(v['Port'])] = 1
-            else:
-                protoports[v['Protocol'] + ':' + str(v['Port'])] += 1
-
-            atktime.append(v['Time'])
-
-        for atk, val in summary['Atk'].items():
+        for atk, val in self.summary['Atk'].items():
             series.append(str(atk), int(val))
 
-        self.summary = summary
         self.series = series
-        self.protoports = protoports
-        self.atktime = atktime
+        self.protoports = self.data.transpose().groupby(["Protocol", "Port"]).size().to_dict()
+        self.protoports = {str(key[0])+':'+str(key[1]):value for key, value in self.protoports.items()}
 
     def topIPs(self):
         top = sorted(self.summary['IP'], key=self.summary['IP'].get, reverse=True)
@@ -91,6 +56,3 @@ class DataHandler:
 
     def getTopProtocols(self):
         return self.protoports
-    
-    def getAtkTime(self):
-        return self.atktime
