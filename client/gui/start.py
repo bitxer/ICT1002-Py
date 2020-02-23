@@ -177,27 +177,19 @@ class MainWindow(QMainWindow):
         else:
             self.showMessageBox('File not Exported',"File not Exported successfully")
             
-            
     def TableDetails(self):
         fileName = QtWidgets.QFileDialog.getSaveFileName(None,  "Save CSV File", "", "CSV Files (*.csv)")
+        exportdata = self.data.getData()
+        formatteddata = exportdata.transpose()
+        formatteddata['IsAtk'] = formatteddata['IsAtk'].map({1:'Yes', 0:'No'}) # Changes 1 and 0 to Yes and No for table
+        formatteddata['Time'] = pd.to_datetime(formatteddata['Time'],unit='s') # Convert epoch time to human readable
         if fileName[0]:
-            with open(fileName[0], 'w') as csv_file:
-                fieldnames = ['IS Attack', 'IP Address', 'Protocol', 'Port', 'Attack','Time']
-                writer = csv.writer(csv_file, lineterminator='\n')   
-                writer.writerow(fieldnames)
-                for row in range(self.datatable.rowCount()):
-                    rowdata = []
-                    for column in range(self.datatable.columnCount()):
-                        item = self.datatable.item(row, column)
-                        if item is not None:                        
-                            rowdata.append(item.text())                  
-                        else:
-                            rowdata.append('')
-                    writer.writerow(rowdata)
-            self.showMessageBox('File Exported',"File Exported successfully")
-        else:
-            self.showMessageBox('File not Exported',"File not Exported successfully")
-    
+            try:
+                formatteddata.to_csv(str(fileName[0]), header=True)
+            except:
+                self.showMessageBox('File not Exported',"File not Exported successfully")
+            else:
+                self.showMessageBox('File Exported',"File Exported successfully")
             
     def showMessageBox(self,title,message):
         msgBox = QtWidgets.QMessageBox()
