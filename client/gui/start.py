@@ -52,7 +52,7 @@ class MainWindow(QMainWindow):
         self.clearbtn.clicked.connect(self.clear)
 
         # upload
-        self.actionUpload.triggered.connect(self.addItem)
+        self.actionUpload.triggered.connect(self.upload)
         
         # Exit
         self.actionExit.triggered.connect(self.exit)
@@ -156,10 +156,13 @@ class MainWindow(QMainWindow):
             self.clear()
 
 
-    def addItem(self):
-        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(None, "Select Text File", "", "Text Files (*.txt)")
-        print (fileName)
-        
+    def upload(self):
+        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(None, "Select Pcap File", "", "Text Files (*.pcap)")
+        if fileName:
+            Clientsock.send(fileName)
+            self.showMessageBox('File uploaded successfully',"File not uploaded successfully")
+        else:
+            self.showMessageBox('File not Uploaded',"File not uploaded successfully")
             
     def Summary(self):
         protocol = self.data.getTopProtocols()
