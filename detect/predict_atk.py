@@ -6,7 +6,13 @@ from tensorflow.keras.utils import to_categorical, normalize
 import numpy as np
 import pandas as pd
 from sklearn.utils import shuffle
-
+import socket
+#lazy to add back ip
+import random
+import struct
+ip_l = []
+for i in range(20):
+    ip_l.append(socket.inet_ntoa(struct.pack('>I', random.randint(1, 0xffffffff))))
 
 output = {}
 atks = {
@@ -24,6 +30,7 @@ atks = {
  11:'SQL Injection',
  12:'SSH-Bruteforce'
 }
+protocols = {num:name[8:] for name,num in vars(socket).items() if name.startswith("IPPROTO")}
 
 
 
@@ -42,12 +49,17 @@ def load_model_csv():
     model = load_model("Atk_multiclass_categorical_50_ep_80_bs.h5")
     return model
 
-def run_predict(fileName):
-    df = loadData(fileName)
+def run_predict(df):
+    #df = loadData(fileName)
 
-    #df1 =df.pop('Label')
+
+
     logID = df.pop('ID')
+    SourceIP = df.pop('SourceIP')
+    DestIP = df.pop('DestIP')
     time = df[['Timestamp']].values
+    protocol = df[['Protocol']].values
+    port = df[['Dst Port']].values
     df_test = normalize(df.values)
 
     model = load_model_csv()
@@ -57,18 +69,22 @@ def run_predict(fileName):
 
 
     predictions = model.predict_proba(df_test)
-    for p,q,t in zip(predictions, logID,time):
-        output[q] = {"IsAtk": 1,
-                     "Atk": atks[np.argmax(p)],
-                     "Time":t[0]
+    i=0
+    proto = dict()
+    for l,sip,dip,p1,p2,p3,t in zip(logID,SourceIP,DestIP,predictions,protocol,port,time):#ID
+        output[int(l)] = {"IsAtk": 1,
+                     "Source IP":sip,
+                     "Dst IP": dip,
+                     "Protocol":protocols[int(p2)],
+                     "Dst Port":int(p3),
+                     "Atk": atks[np.argmax(p1)],
+                     "Time":int(t[0])
                      }
+
+        i+=1
 
     return output
 
 if __name__=="__main__":
-    output = run_predict("small_test_no_labels.csv")
+    output = run_predict("big_test_3.csv")#small_test_no_labels.csv")
     print(output)
-
-
-
-
