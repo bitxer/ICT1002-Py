@@ -4,14 +4,14 @@ import sys, os
 
 import pandas as pd
 from PyQt5 import QtWidgets, uic
-from PyQt5.QtChart import QChartView, QValueAxis, QBarCategoryAxis, QBarSet, QBarSeries
+from PyQt5.QtChart import QChartView, QValueAxis, QBarCategoryAxis, QBarSet, QBarSeries, QChart
 from PyQt5.QtCore import QFile, QTextStream, Qt
 from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import (QApplication, QComboBox, QHeaderView, QLineEdit,
                              QMainWindow, QPushButton, QTableWidget, QTableView,
                              QTableWidgetItem)
 
-from charts import Piechart
+from charts import Piechart, Barchart
 from datahandler import DataHandler
 from devtools import filedata
 from logs import PandasModel
@@ -63,6 +63,31 @@ class MainWindow(QMainWindow):
         
         # Exporting table details
         self.actionTableDetails.triggered.connect(self.TableDetails)
+        self.bargraph()
+
+    def bargraph(self):
+        self.barchart = self.findChild(QChartView, "attackgraph")
+        bardata = self.data.getBar()
+        chartobj = Barchart(bardata)
+        chartseries = chartobj.getSeries()
+
+        chart = QChart()
+        chart.addSeries(chartseries)
+        chart.setTitle("Attacks Over the Past 12 Months")
+        chart.setAnimationOptions(QChart.SeriesAnimations)
+        chart.setTheme(5)
+
+        axisX = QBarCategoryAxis()
+        axisX.append(chartobj.getKeys())
+        chart.addAxis(axisX, Qt.AlignBottom)
+
+        axisY = QValueAxis()
+        axisY.setRange(0, chartobj.getMax())
+        chart.addAxis(axisY, Qt.AlignLeft)
+
+        chart.legend().setVisible(False)
+
+        self.barchart.setChart(chart)
 
     def clear(self):
         self.isatksearch.setCurrentIndex(0)
@@ -104,10 +129,13 @@ class MainWindow(QMainWindow):
     
     def search(self):
         searchquery = {'IsAtk': self.isatksearch.currentText(), 'IP': self.ipsearch.text(), 'Protocol': self.protocolsearch.text(), 'Port': self.portsearch.text(), 'Atk': self.atksearch.text(), 'Time': self.timesearch.text()}
-        searchquery = {k: v for k, v in searchquery.items() if v != '' and searchquery['IsAtk'] != '-'}
+        searchquery = {k: v for k, v in searchquery.items() if v != '' or searchquery['IsAtk'] != '-'}
         if bool(searchquery) is True:
             search = self.pdmdl.newsearch(searchquery)
-            self.logtable.setModel(PandasModel(search, search=True))
+            if search is not None:
+                self.logtable.setModel(PandasModel(search, search=True))
+            else:
+                self.clear()
         else:
             self.clear()
 
@@ -169,7 +197,8 @@ class MainWindow(QMainWindow):
 def main():
     app = QApplication(sys.argv)
     main = MainWindow()
-    main.showMaximized()
+    # main.showMaximized()
+    main.show()
     sys.exit(app.exec_())
 
 if __name__ == '__main__':         

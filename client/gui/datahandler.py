@@ -1,5 +1,5 @@
 from PyQt5.QtChart import QPieSeries
-
+import pandas as pd
 
 class DataHandler:
     def __init__(self, data):
@@ -25,6 +25,11 @@ class DataHandler:
         self.series = series
         self.protoports = self.data.transpose().groupby(["Protocol", "Port"]).size().to_dict()
         self.protoports = {str(key[0])+':'+str(key[1]):value for key, value in self.protoports.items()}
+
+        self.bardata = self.data.transpose()
+        self.bardata = pd.to_datetime(self.bardata['Time'], unit='s')
+        self.bardata = self.bardata.groupby([self.bardata.dt.year, self.bardata.dt.month])
+
 
     def topIPs(self):
         top = sorted(self.summary['IP'], key=self.summary['IP'].get, reverse=True)
@@ -56,3 +61,6 @@ class DataHandler:
 
     def getTopProtocols(self):
         return self.protoports
+
+    def getBar(self):
+        return self.bardata

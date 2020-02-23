@@ -47,12 +47,19 @@ class PandasModel(QAbstractTableModel):
 
     def newsearch(self, query):
         self.query = query
-        pdquery = ''
 
-        for k,v in self.query.items():
-            pdquery += 'self._data["'+str(k)+'"].str.contains("(?i)' + str(v) + '") & '
+        if bool(self.query) is True:
+            pdquery = ''
 
-        if pdquery != '':
-            pdquery = 'self._data[' + pdquery[:-3] + ']'
-            searched = eval(pdquery)
-            return searched
+            for k,v in self.query.items():
+                if k != 'Time':
+                    pdquery += 'self._data["'+str(k)+'"].str.contains("(?i)' + str(v) + '") & '
+                else:
+                    pdquery += 'self._data[\'Time\'].dt.strftime("%Y-%m-%d %H:%M:%S").str.contains("(?i)' + str(v) + '") & '
+
+            if pdquery == 'self._data["IsAtk"].str.contains("(?i)-") & ':
+                return None
+            if pdquery != '':
+                pdquery = 'self._data[' + pdquery[:-3] + ']'
+                searched = eval(pdquery)
+                return searched

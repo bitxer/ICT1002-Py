@@ -45,7 +45,7 @@ def generateport():
     return choice(port)
 
 def generatetime():
-    return randrange(datetime.datetime(2017, 12, 1, 0, 0).timestamp(), datetime.datetime(2019, 12, 1, 0, 0).timestamp())
+    return randrange(datetime.datetime(2019, 3, 1, 0, 0).timestamp(), datetime.datetime(2020, 3, 1, 0, 0).timestamp())
 
 def run():
     randomdict = {}

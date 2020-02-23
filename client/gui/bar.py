@@ -15,6 +15,7 @@ class MainWindow(QMainWindow):
 		set3 = QBarSet('X3')
 		set4 = QBarSet('X4')
 
+		print([random.randint(0, 10) for i in range(6)])
 		set0.append([random.randint(0, 10) for i in range(6)])
 		set1.append([random.randint(0, 10) for i in range(6)])
 		set2.append([random.randint(0, 10) for i in range(6)])
