@@ -13,7 +13,7 @@ from PyQt5.QtWidgets import (QApplication, QComboBox, QHeaderView, QLineEdit,
 
 from charts import Piechart, Barchart
 from datahandler import DataHandler
-from devtools import filedata
+from devtools import filedata # remove for integration
 from logs import PandasModel
 
 
@@ -23,32 +23,31 @@ class MainWindow(QMainWindow):
         #Load the UI Page
         uic.loadUi('main.ui', self)
 
+        # read from file in devtools, remove for integration
         rawdata = filedata().strip("\n")
         rawdata = ast.literal_eval(rawdata)
         df = pd.DataFrame.from_dict(rawdata)
 
+        # run DataHandler to process data
         self.data = DataHandler(df)
         self.summary = self.data.getSummary()
         self.chartseries = self.data.getSeries()
         
-        # displays
+        # Displays Charts and Tables
         self.displaychart("attackchart", self.chartseries, "Attack Types")
         self.displaytable("datatable", self.data.getData())
-
         self.displaytop("topip", self.data.getTopIPs(), ['IP Addresses', 'Count'])
         self.displaytop("topports", self.data.getTopProtocols(), ['Protocol : Port', 'Count'])
 
-        # search
+        # Search Fields and Buttons
         self.isatksearch = self.findChild(QComboBox, "isAtk")
         self.ipsearch = self.findChild(QLineEdit, "ipaddr")
         self.protocolsearch = self.findChild(QLineEdit, "protocol")
         self.portsearch = self.findChild(QLineEdit, "port")
         self.atksearch = self.findChild(QLineEdit, "atk")
         self.timesearch = self.findChild(QLineEdit, "time")
-
         self.searchbtn = self.findChild(QPushButton, "searchbtn")
         self.searchbtn.clicked.connect(self.search)
-
         self.clearbtn = self.findChild(QPushButton, "clearbtn")
         self.clearbtn.clicked.connect(self.clear)
 
@@ -66,16 +65,19 @@ class MainWindow(QMainWindow):
         self.bargraph()
 
     def bargraph(self):
+        """
+        Processes and Creates Bar Graph.
+        """
         self.barchart = self.findChild(QChartView, "attackgraph")
         bardata = self.data.getBar()
         chartobj = Barchart(bardata)
         chartseries = chartobj.getSeries()
 
+        # create QChart object and add data
         chart = QChart()
         chart.addSeries(chartseries)
         chart.setTitle("Attacks Over the Past 12 Months")
         chart.setAnimationOptions(QChart.SeriesAnimations)
-        chart.setTheme(5)
 
         axisX = QBarCategoryAxis()
         axisX.append(chartobj.getKeys())
@@ -90,6 +92,9 @@ class MainWindow(QMainWindow):
         self.barchart.setChart(chart)
 
     def clear(self):
+        """
+        Clears Search Form
+        """
         self.isatksearch.setCurrentIndex(0)
         self.ipsearch.clear()
         self.protocolsearch.clear()
@@ -100,12 +105,18 @@ class MainWindow(QMainWindow):
         self.logtable.setModel(self.pdmdl)
         
     def displaychart(self, widgetname, chartseries, header):
+        """
+        Displays PieChart
+        """
         self.piechart = self.findChild(QChartView, widgetname)
         chartdata = Piechart(chartseries, header).create()
         self.piechart.setChart(chartdata)
         self.piechart.setRenderHint(QPainter.Antialiasing)
 
     def displaytop(self, widgetname, data, header):
+        """
+        Displays Top Table
+        """
         table = self.findChild(QTableWidget, widgetname)
         table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         table.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
@@ -119,7 +130,9 @@ class MainWindow(QMainWindow):
             index += 1
 
     def displaytable(self, widgetname, data):
-        # table = self.findChild(QTableWidget, widgetname)
+        """
+        Displays Log Table
+        """
         self.logtable = self.findChild(QTableView, widgetname)
         self.logtable.setSortingEnabled(True)
         self.pdmdl = PandasModel(data)
@@ -128,10 +141,13 @@ class MainWindow(QMainWindow):
         self.logtable.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
     
     def search(self):
+        """
+        Checks search form to be sent to table
+        """
         searchquery = {'IsAtk': self.isatksearch.currentText(), 'IP': self.ipsearch.text(), 'Protocol': self.protocolsearch.text(), 'Port': self.portsearch.text(), 'Atk': self.atksearch.text(), 'Time': self.timesearch.text()}
         searchquery = {k: v for k, v in searchquery.items() if v != '' or searchquery['IsAtk'] != '-'}
         if bool(searchquery) is True:
-            search = self.pdmdl.newsearch(searchquery)
+            search = self.pdmdl.search(searchquery)
             if search is not None:
                 self.logtable.setModel(PandasModel(search, search=True))
             else:

@@ -43,7 +43,7 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>-770</y>
+         <y>-1158</y>
          <width>1163</width>
          <height>2309</height>
         </rect>
@@ -527,8 +527,8 @@
             <property name="font">
              <font>
               <pointsize>12</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
+              <weight>50</weight>
+              <bold>false</bold>
              </font>
             </property>
             <property name="sizeAdjustPolicy">
@@ -541,7 +541,7 @@
              <number>150</number>
             </attribute>
             <attribute name="horizontalHeaderDefaultSectionSize">
-             <number>49</number>
+             <number>150</number>
             </attribute>
             <attribute name="horizontalHeaderHighlightSections">
              <bool>true</bool>
@@ -559,7 +559,7 @@
              <number>50</number>
             </attribute>
             <attribute name="verticalHeaderDefaultSectionSize">
-             <number>29</number>
+             <number>50</number>
             </attribute>
             <attribute name="verticalHeaderHighlightSections">
              <bool>true</bool>

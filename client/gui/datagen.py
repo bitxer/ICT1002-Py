@@ -3,6 +3,8 @@ import numpy as np
 import datetime
 import os
 
+# remove for integration
+
 atks = {
  0:'Bot',
  1:'Brute Force -Web',
@@ -30,7 +32,6 @@ def generateisatk():
 
 def generateatks(atk):
     if atk == 1:
-        # print(choice(list(atks.values())))
         return choice(list(atks.values()))
     else:
         return 'Benign'
