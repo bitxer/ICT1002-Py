@@ -7,13 +7,6 @@ import numpy as np
 import pandas as pd
 from sklearn.utils import shuffle
 import socket
-#lazy to add back ip
-import random
-import struct
-ip_l = []
-for i in range(20):
-    ip_l.append(socket.inet_ntoa(struct.pack('>I', random.randint(1, 0xffffffff))))
-
 output = {}
 atks = {
  0:'Bot',
@@ -50,9 +43,6 @@ def load_model_csv():
     return model
 
 def run_predict(df):
-    #df = loadData(fileName)
-
-
 
     logID = df.pop('ID')
     SourceIP = df.pop('SourceIP')
@@ -86,5 +76,5 @@ def run_predict(df):
     return output
 
 if __name__=="__main__":
-    output = run_predict("big_test_3.csv")#small_test_no_labels.csv")
+    output = run_predict("big_test_3.csv")
     print(output)

@@ -65,6 +65,5 @@ def run_predict(fileName):
 
 if __name__ == "__main__":
     output, df2 = run_predict("test3.csv")
-    #df2.to_csv("test3.csv")    
     print(df2)
     print(output)
