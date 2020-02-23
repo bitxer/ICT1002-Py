@@ -1,9 +1,9 @@
 from random import randint, choice, randrange
-import numpy as np
+import numpy as np # also can remove from requirements
 import datetime
 import os
 
-# remove for integration
+# remove for integration, created to generate data expected from ML side.
 
 atks = {
  0:'Bot',
