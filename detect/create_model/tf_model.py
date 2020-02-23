@@ -15,7 +15,7 @@ from timeit import default_timer as timer
 import time
 
 dataPath = '../'
-resultPath = '../results_keras_tensorflow'
+resultPath = '../model'
 if not os.path.exists(resultPath):
     print('result path {} created.'.format(resultPath))
     os.mkdir(resultPath)
