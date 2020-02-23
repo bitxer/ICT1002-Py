@@ -29,7 +29,6 @@ def run_predict_isAtk(df):
     df1 = df.copy()
     logID = df.pop('ID')
     sourceIP = df.pop('SourceIP')
-    DestIP = df.pop('DestIP')
     protocol = df['Protocol'].values
     port_num = df['Dst Port'].values
     time = df[['Timestamp']].values
@@ -39,14 +38,13 @@ def run_predict_isAtk(df):
     predictions = model.predict_proba(df_test)
 
     df2 = pd.DataFrame(columns=columnList)
-    for p, q, r, s, t, sip, dip in zip(predictions, logID, protocol, port_num, time, sourceIP, DestIP):
+    for p, q, r, s, t, sip in zip(predictions, logID, protocol, port_num, time, sourceIP):
         if np.argmax(p) == 0:
             output[int(q)] = {
                 "IsAtk": np.argmax(p),
-                "Source IP": sip,
-                "Dst IP": dip,
+                "IP": sip,
                 "Protocol": protocols[r],
-                "Dst Port": int(s),
+                "Port": int(s),
                 "Time": int(t[0])
             }
 
@@ -92,7 +90,6 @@ def run_predict_Atks(df):
 
     logID = df.pop('ID')
     SourceIP = df.pop('SourceIP')
-    DestIP = df.pop('DestIP')
     time = df[['Timestamp']].values
     protocol = df[['Protocol']].values
     port = df[['Dst Port']].values
@@ -103,12 +100,11 @@ def run_predict_Atks(df):
                   metrics=['accuracy'])
 
     predictions = model.predict_proba(df_test)
-    for l, sip, dip, p1, p2, p3, t in zip(logID, SourceIP, DestIP, predictions, protocol, port, time):
+    for l, sip, p1, p2, p3, t in zip(logID, SourceIP, predictions, protocol, port, time):
         output[int(l)] = {"IsAtk": 1,
-                          "Source IP": sip,
-                          "Dst IP": dip,
+                          "IP": sip,
                           "Protocol": protocols[int(p2)],
-                          "Dst Port": int(p3),
+                          "Port": int(p3),
                           "Atk": atks[np.argmax(p1)],
                           "Time": int(t[0])
                           }
