@@ -23,46 +23,59 @@ class MainWindow(QMainWindow):
         #Load the UI Page
         uic.loadUi('main.ui', self)
 
-        # read from file in devtools, remove for integration
-        rawdata = filedata().strip("\n")
-        rawdata = ast.literal_eval(rawdata)
-        df = pd.DataFrame.from_dict(rawdata)
-
-        # run DataHandler to process data
-        self.data = DataHandler(df)
-        self.summary = self.data.getSummary()
-        self.chartseries = self.data.getSeries()
-        
-        # Displays Charts and Tables
-        self.displaychart("attackchart", self.chartseries, "Attack Types")
-        self.displaytable("datatable", self.data.getData())
-        self.displaytop("topip", self.data.getTopIPs(), ['IP Addresses', 'Count'])
-        self.displaytop("topports", self.data.getTopProtocols(), ['Protocol : Port', 'Count'])
-
-        # Search Fields and Buttons
-        self.isatksearch = self.findChild(QComboBox, "isAtk")
-        self.ipsearch = self.findChild(QLineEdit, "ipaddr")
-        self.protocolsearch = self.findChild(QLineEdit, "protocol")
-        self.portsearch = self.findChild(QLineEdit, "port")
-        self.atksearch = self.findChild(QLineEdit, "atk")
-        self.timesearch = self.findChild(QLineEdit, "time")
-        self.searchbtn = self.findChild(QPushButton, "searchbtn")
-        self.searchbtn.clicked.connect(self.search)
-        self.clearbtn = self.findChild(QPushButton, "clearbtn")
-        self.clearbtn.clicked.connect(self.clear)
-
         # upload
         self.actionUpload.triggered.connect(self.addItem)
         
         # Exit
         self.actionExit.triggered.connect(self.exit)
+
+        self.df = None
         
-        # Export Protocols and IP
-        self.actionSummary.triggered.connect(self.Summary)
-        
-        # Exporting table details
-        self.actionTableDetails.triggered.connect(self.TableDetails)
-        self.bargraph()
+    def addItem(self):
+        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(None, "Select Text File", "", "Text Files (*.txt)")
+        f = open(fileName, "r")
+
+        # insert handing over to ML side code here
+
+
+        # return from ML code
+        data = f.readline().strip("\n")
+        data = ast.literal_eval(data)
+        self.df = pd.DataFrame.from_dict(data)
+
+        self.display()
+    
+    def display(self):
+        if self.df is not None:
+            self.data = DataHandler(self.df)
+
+            self.summary = self.data.getSummary()
+            self.chartseries = self.data.getSeries()
+            
+            # Displays Charts and Tables
+            self.displaychart("attackchart", self.chartseries, "Attack Types")
+            self.displaytable("datatable", self.data.getData())
+            self.displaytop("topip", self.data.getTopIPs(), ['IP Addresses', 'Count'])
+            self.displaytop("topports", self.data.getTopProtocols(), ['Protocol : Port', 'Count'])
+
+            # Search Fields and Buttons
+            self.isatksearch = self.findChild(QComboBox, "isAtk")
+            self.ipsearch = self.findChild(QLineEdit, "ipaddr")
+            self.protocolsearch = self.findChild(QLineEdit, "protocol")
+            self.portsearch = self.findChild(QLineEdit, "port")
+            self.atksearch = self.findChild(QLineEdit, "atk")
+            self.timesearch = self.findChild(QLineEdit, "time")
+            self.searchbtn = self.findChild(QPushButton, "searchbtn")
+            self.searchbtn.clicked.connect(self.search)
+            self.clearbtn = self.findChild(QPushButton, "clearbtn")
+            self.clearbtn.clicked.connect(self.clear)
+            
+            # Export Protocols and IP
+            self.actionSummary.triggered.connect(self.Summary)
+            
+            # Exporting table details
+            self.actionTableDetails.triggered.connect(self.TableDetails)
+            self.bargraph()
 
     def bargraph(self):
         """
@@ -155,12 +168,6 @@ class MainWindow(QMainWindow):
         else:
             self.clear()
 
-
-    def addItem(self):
-        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(None, "Select Text File", "", "Text Files (*.txt)")
-        print (fileName)
-        
-            
     def Summary(self):
         protocol = self.data.getTopProtocols()
         ip = self.data.getTopIPs()
