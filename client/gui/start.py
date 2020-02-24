@@ -30,6 +30,12 @@ class MainWindow(QMainWindow):
         self.actionExit.triggered.connect(self.exit)
 
         self.df = None
+        
+        # Export Protocols and IP
+        self.actionSummary.triggered.connect(self.Summary)
+        
+        # Exporting table details
+        self.actionTableDetails.triggered.connect(self.TableDetails)
 
     def popup(self):
         msgBox = QtWidgets.QMessageBox()
@@ -89,12 +95,7 @@ class MainWindow(QMainWindow):
             self.searchbtn.clicked.connect(self.search)
             self.clearbtn = self.findChild(QPushButton, "clearbtn")
             self.clearbtn.clicked.connect(self.clear)
-            
-            # Export Protocols and IP
-            self.actionSummary.triggered.connect(self.Summary)
-            
-            # Exporting table details
-            self.actionTableDetails.triggered.connect(self.TableDetails)
+
             self.bargraph()
 
     def bargraph(self):
