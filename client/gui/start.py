@@ -24,19 +24,30 @@ class MainWindow(QMainWindow):
         uic.loadUi('main.ui', self)
 
         # upload
-        self.actionUpload.triggered.connect(self.addItem)
+        self.actionUpload.triggered.connect(self.upload)
         
         # Exit
         self.actionExit.triggered.connect(self.exit)
 
         self.df = None
         
-    def addItem(self):
+    def upload(self):
         fileName, _ = QtWidgets.QFileDialog.getOpenFileName(None, "Select Text File", "", "Text Files (*.txt)")
         f = open(fileName, "r")
 
-        # insert handing over to ML side code here
+        # fileName, _ = QtWidgets.QFileDialog.getOpenFileName(None, "Select Pcap File", "", "Text Files (*.pcap)") # use this line to open pcap
 
+        ### insert handing over to ML side code here
+
+        # if fileName:
+        #     Clientsock.send(fileName)
+        #     self.showMessageBox('File uploaded successfully',"File not uploaded successfully")
+
+
+
+
+        # else:
+        #     self.showMessageBox('File not Uploaded',"File not uploaded successfully")
 
         # return from ML code
         data = f.readline().strip("\n")
@@ -167,7 +178,7 @@ class MainWindow(QMainWindow):
                 self.clear()
         else:
             self.clear()
-
+            
     def Summary(self):
         protocol = self.data.getTopProtocols()
         ip = self.data.getTopIPs()
