@@ -40,7 +40,7 @@ def generateip():
     return ".".join(str(randint(0, 255)) for _ in range(4))
 
 def generateprotocols():
-    return np.random.choice(protocol, p=[0.9, 0.1])
+    return np.random.choice(protocol, p=[0.99, 0.01])
 
 def generateport():
     return choice(port)
