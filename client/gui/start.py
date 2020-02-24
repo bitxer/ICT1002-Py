@@ -30,6 +30,15 @@ class MainWindow(QMainWindow):
         self.actionExit.triggered.connect(self.exit)
 
         self.df = None
+
+    def popup(self):
+        msgBox = QtWidgets.QMessageBox()
+        msgBox.setIcon(QtWidgets.QMessageBox.Information)
+        msgBox.setWindowTitle("New File")
+        msgBox.setText("Upload New File to Analyze.")
+        msgBox.setStandardButtons(QtWidgets.QMessageBox.Open)
+        msgBox.buttonClicked.connect(self.upload)
+        msgBox.exec()
         
     def upload(self):
         fileName, _ = QtWidgets.QFileDialog.getOpenFileName(None, "Select Text File", "", "Text Files (*.txt)")
@@ -223,8 +232,9 @@ class MainWindow(QMainWindow):
 def main():
     app = QApplication(sys.argv)
     main = MainWindow()
-    # main.showMaximized()
-    main.show()
+    main.showMaximized()
+    # main.show()
+    main.popup()
     sys.exit(app.exec_())
 
 if __name__ == '__main__':         
