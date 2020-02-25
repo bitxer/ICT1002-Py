@@ -1,11 +1,11 @@
 import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # Suppress error
 from tensorflow.keras.models import load_model
 from tensorflow.keras.utils import to_categorical, normalize
 import numpy as np
 import pandas as pd
 import socket
 
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # Suppress error
 
 def run_predict_isAtk(df):
     '''
