@@ -13,8 +13,6 @@ class ProcessData():
         self.reader = Reader(filename, 1)
         self.df = self.reader.read()
         return self.df
-    
-
 
 class ClientSocket():
     def __init__(self, hostname='localhost', port=8443):
