@@ -163,8 +163,8 @@ class MainWindow(QMainWindow):
         self.pdmdl = PandasModel(data)
         self.logtable.setModel(self.pdmdl)
         self.logtable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.logtable.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
-    
+        self.logtable.verticalHeader().setSectionResizeMode(QHeaderView.Stretch)
+
     def search(self):
         """
         Checks search form to be sent to table

@@ -43,9 +43,9 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>-600</y>
+         <y>-770</y>
          <width>1163</width>
-         <height>2309</height>
+         <height>1709</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -513,7 +513,7 @@
           <item>
            <widget class="QTableView" name="datatable">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+             <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
@@ -521,13 +521,19 @@
             <property name="minimumSize">
              <size>
               <width>800</width>
-              <height>1000</height>
+              <height>400</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
               <width>16777215</width>
               <height>3000</height>
+             </size>
+            </property>
+            <property name="sizeIncrement">
+             <size>
+              <width>0</width>
+              <height>100</height>
              </size>
             </property>
             <property name="font">
