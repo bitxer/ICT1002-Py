@@ -59,22 +59,6 @@ class MainWindow(QMainWindow):
             self.display()
         else:
             self.showMessageBox("File Not Uploaded", "File Not Uploaded Successfully")
-
-            # clientsock.ProcessData()
-        # if fileName is None:
-
-        # f = open(fileName, "r")
-
-
-        # # return from ML code
-        # data = f.readline().strip("\n")
-        # data = ast.literal_eval(data)
-        # self.df = DataFrame.from_dict(data)
-        
-        # QApplication.processEvents()
-
-
-        # self.display()
     
     def display(self):
         if self.df is not None:
