@@ -15,7 +15,7 @@ from client.charts import Piechart, Barchart
 from client.datahandler import DataHandler
 # from devtools import filedata # remove for integration
 from client.logs import PandasModel
-from clientsock
+import client.clientsock
 
 class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
@@ -48,18 +48,23 @@ class MainWindow(QMainWindow):
         
     def upload(self):
         fileName, _ = QFileDialog.getOpenFileName(None, "Select CSV File", "", "CSV Files (*.csv)")
+
+        if fileName is not None:
+            print(fileName)
+        # if fileName is None:
+
         # f = open(fileName, "r")
 
 
         # # return from ML code
         # data = f.readline().strip("\n")
         # data = ast.literal_eval(data)
-        self.df = DataFrame.from_dict(data)
+        # self.df = DataFrame.from_dict(data)
         
-        QApplication.processEvents()
+        # QApplication.processEvents()
 
 
-        self.display()
+        # self.display()
     
     def display(self):
         if self.df is not None:
