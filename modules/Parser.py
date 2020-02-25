@@ -11,8 +11,8 @@ class Reader():
         path : str
             Path to log file
         type : int
-            type can be one of 4 values [1, 2, 3, 4, 5, 6] to represent
-            [csv, tsv, json, excel, syslog, pcap] file type respectively.
+            type can be one of 4 values [1, 2, 3, 4] to represent
+            [csv, tsv, json, excel] file type respectively.
             
         Raise
         -----
@@ -27,7 +27,7 @@ class Reader():
         # else:
         #     raise FileNotFoundError("Specified directory not present")
             
-        types = {1: '_csv', 2: "_tsv", 3: '_json', 4: '_excel', 5: '_syslog', 6: '_pcap'}
+        types = {1: '_csv', 2: "_tsv", 3: '_json', 4: '_excel'}
         if type not in types.keys():
             raise ValueError('Invalid type specified')
         
@@ -53,17 +53,9 @@ class Reader():
         _tsv = lambda : read_csv(self.path, sep='\t')
         _json = lambda : read_json(self.path)
         _excel = lambda : read_excel(self.path)
-        _syslog = lambda : _read_syslog()
-        _pcap = lambda : _read_pcap()
 
         return eval('{}()'.format(self.type))
 
-    def _read_syslog(self):
-        # Implement syslog parsing 
-        pass
-    
-    def _read_pcap(self):
-        pass
 
 class Writer():
     def __init__(self, path, type, df):
