@@ -49,12 +49,11 @@ class MainWindow(QMainWindow):
     def upload(self):
         fileName, _ = QFileDialog.getOpenFileName(None, "Select CSV File", "", "CSV Files (*.csv)")
 
-
-        if fileName is not None:
+        if fileName is not '':
             proc = cs.ProcessData(fileName)
             proc.parse()
-            #self.df is analysis
-            self.df = proc.analyse()
+            data = proc.analyse()
+            self.df = DataFrame.from_dict(data)
 
             self.display()
         else:
