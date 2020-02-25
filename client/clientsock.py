@@ -9,10 +9,12 @@ class ProcessData():
         self.filename = filename
         self.format = format
     
-    def parse():
+    def parse(self):
         self.reader = Reader(filename, 1)
         self.df = self.reader.read()
         return self.df
+    
+
     
 
 
