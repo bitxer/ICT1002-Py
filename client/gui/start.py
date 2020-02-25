@@ -3,13 +3,13 @@ import csv
 import sys, os
 
 import pandas as pd
-from PyQt5 import QtWidgets, uic
+from PyQt5 import uic
 from PyQt5.QtChart import QChartView, QValueAxis, QBarCategoryAxis, QBarSet, QBarSeries, QChart
 from PyQt5.QtCore import QFile, QTextStream, Qt
 from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import (QApplication, QComboBox, QHeaderView, QLineEdit,
                              QMainWindow, QPushButton, QTableWidget, QTableView,
-                             QTableWidgetItem)
+                             QTableWidgetItem, QMessageBox, QFileDialog)
 
 from charts import Piechart, Barchart
 from datahandler import DataHandler
@@ -38,19 +38,19 @@ class MainWindow(QMainWindow):
         self.actionTableDetails.triggered.connect(self.TableDetails)
 
     def popup(self):
-        msgBox = QtWidgets.QMessageBox()
-        msgBox.setIcon(QtWidgets.QMessageBox.Information)
+        msgBox = QMessageBox()
+        msgBox.setIcon(QMessageBox.Information)
         msgBox.setWindowTitle("New File")
         msgBox.setText("Upload New File to Analyze.")
-        msgBox.setStandardButtons(QtWidgets.QMessageBox.Open)
+        msgBox.setStandardButtons(QMessageBox.Open)
         msgBox.buttonClicked.connect(self.upload)
         msgBox.exec()
         
     def upload(self):
-        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(None, "Select Text File", "", "Text Files (*.txt)")
+        fileName, _ = QFileDialog.getOpenFileName(None, "Select Text File", "", "Text Files (*.txt)")
         f = open(fileName, "r")
 
-        # fileName, _ = QtWidgets.QFileDialog.getOpenFileName(None, "Select Pcap File", "", "Text Files (*.pcap)") # use this line to open pcap
+        # fileName, _ = QFileDialog.getOpenFileName(None, "Select Pcap File", "", "Text Files (*.pcap)") # use this line to open pcap
 
         ### insert handing over to ML side code here
 
@@ -192,7 +192,7 @@ class MainWindow(QMainWindow):
     def Summary(self):
         protocol = self.data.getTopProtocols()
         ip = self.data.getTopIPs()
-        fileName = QtWidgets.QFileDialog.getSaveFileName(None,  "Save CSV File", "", "CSV Files (*.csv)")
+        fileName = QFileDialog.getSaveFileName(None,  "Save CSV File", "", "CSV Files (*.csv)")
         if fileName[0]:
             with open(fileName[0], 'w') as csv_file:
                 fieldnames = ['Protocol & Ports', 'Counts', 'IP Address', 'Counts']
@@ -206,7 +206,7 @@ class MainWindow(QMainWindow):
             self.showMessageBox('File not Exported',"File not Exported successfully")
             
     def TableDetails(self):
-        fileName = QtWidgets.QFileDialog.getSaveFileName(None,  "Save CSV File", "", "CSV Files (*.csv)")
+        fileName = QFileDialog.getSaveFileName(None,  "Save CSV File", "", "CSV Files (*.csv)")
         exportdata = self.data.getData()
         formatteddata = exportdata.transpose()
         formatteddata['IsAtk'] = formatteddata['IsAtk'].map({1:'Yes', 0:'No'}) # Changes 1 and 0 to Yes and No for table
@@ -220,11 +220,11 @@ class MainWindow(QMainWindow):
                 self.showMessageBox('File Exported',"File Exported successfully")
             
     def showMessageBox(self,title,message):
-        msgBox = QtWidgets.QMessageBox()
-        msgBox.setIcon(QtWidgets.QMessageBox.Information)
+        msgBox = QMessageBox()
+        msgBox.setIcon(QMessageBox.Information)
         msgBox.setWindowTitle(title)
         msgBox.setText(message)
-        msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
+        msgBox.setStandardButtons(QMessageBox.Ok)
         msgBox.exec()
 
     def exit(self):
