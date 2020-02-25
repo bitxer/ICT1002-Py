@@ -68,12 +68,16 @@ class MainWindow(QMainWindow):
         data = f.readline().strip("\n")
         data = ast.literal_eval(data)
         self.df = pd.DataFrame.from_dict(data)
+        
+        QApplication.processEvents()
+
 
         self.display()
     
     def display(self):
         if self.df is not None:
             self.data = DataHandler(self.df)
+            QApplication.processEvents()
 
             self.summary = self.data.getSummary()
             self.chartseries = self.data.getSeries()
@@ -83,6 +87,7 @@ class MainWindow(QMainWindow):
             self.displaytable("datatable", self.data.getData())
             self.displaytop("topip", self.data.getTopIPs(), ['IP Addresses', 'Count'])
             self.displaytop("topports", self.data.getTopProtocols(), ['Protocol : Port', 'Count'])
+            QApplication.processEvents()
 
             # Search Fields and Buttons
             self.isatksearch = self.findChild(QComboBox, "isAtk")
@@ -95,8 +100,10 @@ class MainWindow(QMainWindow):
             self.searchbtn.clicked.connect(self.search)
             self.clearbtn = self.findChild(QPushButton, "clearbtn")
             self.clearbtn.clicked.connect(self.clear)
+            QApplication.processEvents()
 
             self.bargraph()
+            QApplication.processEvents()
 
     def bargraph(self):
         """
