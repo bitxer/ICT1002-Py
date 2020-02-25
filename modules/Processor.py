@@ -1,6 +1,3 @@
-# Socket for client
-# Secured connection will be implemented at a later stage
-
 import socket
 from modules.Parser import Reader
 from modules.Predict import run_predict_main

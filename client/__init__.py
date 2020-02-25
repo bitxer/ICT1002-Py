@@ -7,15 +7,12 @@ from PyQt5 import uic
 from PyQt5.QtChart import QChartView, QValueAxis, QBarCategoryAxis, QBarSet, QBarSeries, QChart
 from PyQt5.QtCore import QFile, QTextStream, Qt
 from PyQt5.QtGui import QPainter
-from PyQt5.QtWidgets import (QApplication, QComboBox, QHeaderView, QLineEdit,
-                             QMainWindow, QPushButton, QTableWidget, QTableView,
-                             QTableWidgetItem, QMessageBox, QFileDialog)
+from PyQt5.QtWidgets import QApplication, QComboBox, QHeaderView, QLineEdit, QMainWindow, QPushButton, QTableWidget, QTableView,QTableWidgetItem, QMessageBox, QFileDialog
 
 from client.charts import Piechart, Barchart
 from client.datahandler import DataHandler
-# from devtools import filedata # remove for integration
 from client.logs import PandasModel
-import client.clientsock as cs
+from modules.Processor import ProcessData
 
 class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
@@ -50,7 +47,7 @@ class MainWindow(QMainWindow):
         fileName, _ = QFileDialog.getOpenFileName(None, "Select CSV File", "", "CSV Files (*.csv)")
 
         if fileName is not '':
-            proc = cs.ProcessData(fileName)
+            proc = ProcessData(fileName)
             proc.parse()
             data = proc.analyse()
             self.df = DataFrame.from_dict(data)
@@ -205,7 +202,7 @@ class MainWindow(QMainWindow):
         formatteddata['Time'] = to_datetime(formatteddata['Time'],unit='s') # Convert epoch time to human readable
         if fileName[0]:
             try:
-                formatteddata.to_csv(str(fileName[0]), header=True)
+                formatteddata.to_csv(str(fileName[0]), header=True, index=False)
             except:
                 self.showMessageBox('File not Exported',"File not Exported successfully")
             else:
@@ -226,7 +223,6 @@ def start():
     app = QApplication(sys.argv)
     main = MainWindow()
     main.showMaximized()
-    # main.show()
     main.popup()
     sys.exit(app.exec_())
 
