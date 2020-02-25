@@ -4,21 +4,30 @@ from PyQt5.QtCore import QAbstractTableModel, QVariant
 from PyQt5.QtCore import Qt, QItemSelectionModel
 from PyQt5.QtWidgets import QHeaderView, QTableWidgetItem
 import pandas as pd
+import numpy as np
 
 class PandasModel(QAbstractTableModel):
     """
     Table Model for Log Table
     """
-    header = ["Is Attack", "IP Address", "Protocol", "Port", "Attack", "Time"]
-
+    header = ["Time", "IP Address", "Protocol", "Port", "Attack"]
     def __init__(self, data, parent=None, search=None):
         QAbstractTableModel.__init__(self, parent)
+        self.header = ["Time", "IP", "Protocol", "Port", "Atk"]
+
         if search is None:
+            self.ogdata = data.transpose() # for search
+            self.ogdata['Time'] = pd.to_datetime(self.ogdata['Time'],unit='s') # Convert epoch time to human readable
             self._data = data.transpose()
-            self._data['IsAtk'] = self._data['IsAtk'].map({1:'Yes', 0:'No'}) # Changes 1 and 0 to Yes and No for table
-            self._data['Time'] = pd.to_datetime(self._data['Time'],unit='s') # Convert epoch time to human readable
+            self._data = self._data[self.header]
+
         else:
             self._data = data
+        
+        self._data['Atk'] = self._data['Atk'].fillna('Not Attack') # replace nan with Not Attack
+        self._data['Time'] = pd.to_datetime(self._data['Time'],unit='s') # Convert epoch time to human readable
+
+
 
     def rowCount(self, parent=None):
         """
@@ -60,26 +69,33 @@ class PandasModel(QAbstractTableModel):
         except Exception as e:
             print(e)
 
+    def _search(self):
+
+        if len(self.query.keys()) == 0:
+            return False
+
+        key = list(self.query.keys())[0]
+        value = self.query.pop(key)
+        result = None
+        con = '(?i){}'.format(value)
+        if key != 'Time':
+            result = self.ogdata[key].astype(str).str.contains(con)
+        else:
+            result = self.ogdata[key].dt.strftime("%Y-%m-%d %H:%M:%S").str.contains(con) 
+        
+        if self.query == {}:
+            return result
+        else:
+            return result & self._search()
+
+
     def search(self, query):
         """
         Process and Returns Search Dataframe
         """
         self.query = query
 
-        if bool(self.query) is True: # check if query is not empty
-            pdquery = ''
+        result = self._search()
+        result = self.ogdata[result]
 
-            for k,v in self.query.items():
-                if k != 'Time':
-                    pdquery += 'self._data["'+str(k)+'"].str.contains("(?i)' + str(v) + '") & ' # compare string for time
-                else:
-                    pdquery += 'self._data[\'Time\'].dt.strftime("%Y-%m-%d %H:%M:%S").str.contains("(?i)' + str(v) + '") & ' # check if string contains
-
-            if pdquery == 'self._data["IsAtk"].str.contains("(?i)-") & ': 
-                # if the IsAtk field is only - return None to not carry out search
-                return None 
-
-            if pdquery != '':
-                pdquery = 'self._data[' + pdquery[:-3] + ']'
-                searched = eval(pdquery) # evaluate and return search df
-                return searched
+        return result[self.header]

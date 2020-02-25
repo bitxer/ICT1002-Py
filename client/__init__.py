@@ -52,6 +52,8 @@ class MainWindow(QMainWindow):
             data = proc.analyse()
             self.df = DataFrame.from_dict(data)
 
+            print(self.df)
+
             self.display()
         else:
             self.showMessageBox("File Not Uploaded", "File Not Uploaded Successfully")
@@ -66,7 +68,7 @@ class MainWindow(QMainWindow):
             
             # Displays Charts and Tables
             self.displaychart("attackchart", self.chartseries, "Attack Types")
-            self.displaytable("datatable", self.data.getData())
+            self.displaytable("datatable", self.df)
             self.displaytop("topip", self.data.getTopIPs(), ['IP Addresses', 'Count'])
             self.displaytop("topports", self.data.getTopProtocols(), ['Protocol : Port', 'Count'])
             QApplication.processEvents()
@@ -168,7 +170,15 @@ class MainWindow(QMainWindow):
         Checks search form to be sent to table
         """
         searchquery = {'IsAtk': self.isatksearch.currentText(), 'IP': self.ipsearch.text(), 'Protocol': self.protocolsearch.text(), 'Port': self.portsearch.text(), 'Atk': self.atksearch.text(), 'Time': self.timesearch.text()}
-        searchquery = {k: v for k, v in searchquery.items() if v != '' or searchquery['IsAtk'] != '-'}
+        searchquery = {k: v for k, v in searchquery.items() if v != ''}
+
+        atk = {'Yes': 1, 'No':0}
+
+        if searchquery.get('IsAtk', None) == '-':
+            del searchquery['IsAtk']
+        elif searchquery.get('IsAtk', None) != None:
+            searchquery['IsAtk'] = atk[searchquery['IsAtk']]
+
         if bool(searchquery) is True:
             search = self.pdmdl.search(searchquery)
             if search is not None:
