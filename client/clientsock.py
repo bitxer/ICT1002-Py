@@ -2,6 +2,19 @@
 # Secured connection will be implemented at a later stage
 
 import socket
+from modules.Parser import Reader
+
+class ProcessData():
+    def __init__(self, filename, format='csv'):
+        self.filename = filename
+        self.format = format
+    
+    def parse():
+        self.reader = Reader(filename, 1)
+        self.df = self.reader.read()
+        return self.df
+    
+
 
 class ClientSocket():
     def __init__(self, hostname='localhost', port=8443):

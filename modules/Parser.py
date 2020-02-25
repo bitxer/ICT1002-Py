@@ -2,7 +2,7 @@ import os
 from pandas import read_csv, read_excel, read_json
 
 class Reader():
-    def __init__(self, data, type):
+    def __init__(self, path, type):
         '''
         Initialise reader to read log data
         
@@ -21,7 +21,7 @@ class Reader():
         ValueError
             Raised when a invalid file type is given
         '''
-        self.data = data
+        self.path = path
         # if os.path.exists(path):
         #     self.path = path
         # else:
