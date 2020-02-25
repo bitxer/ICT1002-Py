@@ -1,11 +1,11 @@
 import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # Suppress error
 from tensorflow.keras.models import load_model
 from tensorflow.keras.utils import to_categorical, normalize
-import numpy as np
-import pandas as pd
+from numpy import argmax
+from pandas import DataFrame
 import socket
 
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # Suppress error
 
 def run_predict_isAtk(df):
     '''
@@ -37,11 +37,11 @@ def run_predict_isAtk(df):
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
     predictions = model.predict_proba(df_test)
 
-    df2 = pd.DataFrame(columns=columnList)
+    df2 = DataFrame(columns=columnList)
     for p, q, r, s, t, sip in zip(predictions, logID, protocol, port_num, time, sourceIP):
-        if np.argmax(p) == 0:
+        if argmax(p) == 0:
             output[int(q)] = {
-                "IsAtk": np.argmax(p),
+                "IsAtk": argmax(p),
                 "IP": sip,
                 "Protocol": protocols[r],
                 "Port": int(s),
@@ -105,7 +105,7 @@ def run_predict_Atks(df):
                           "IP": sip,
                           "Protocol": protocols[int(p2)],
                           "Port": int(p3),
-                          "Atk": atks[np.argmax(p1)],
+                          "Atk": atks[argmax(p1)],
                           "Time": int(t[0])
                           }
     return output

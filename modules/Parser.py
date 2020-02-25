@@ -49,10 +49,10 @@ class Reader():
         Exception
             If read is unsuccessful
         '''
-        _csv = lambda : read_csv(self.data)
-        _tsv = lambda : read_csv(self.data, sep='\t')
-        _json = lambda : read_json(self.data)
-        _excel = lambda : read_excel(self.data)
+        _csv = lambda : read_csv(self.path)
+        _tsv = lambda : read_csv(self.path, sep='\t')
+        _json = lambda : read_json(self.path)
+        _excel = lambda : read_excel(self.path)
         _syslog = lambda : _read_syslog()
         _pcap = lambda : _read_pcap()
 
