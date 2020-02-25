@@ -33,7 +33,7 @@ def run_predict_isAtk(df):
     port_num = df['Dst Port'].values
     time = df[['Timestamp']].values
     df_test = normalize(df.values)
-    model = load_model("model/binary_class_classifier.h5")
+    model = load_model("modules/model/binary_class_classifier.h5")
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
     predictions = model.predict_proba(df_test)
 
@@ -94,7 +94,7 @@ def run_predict_Atks(df):
     protocol = df[['Protocol']].values
     port = df[['Dst Port']].values
     df_test = normalize(df.values)
-    model = load_model("model/Atk_multiclass_categorical_50_ep_80_bs.h5")
+    model = load_model("modules/model/Atk_multiclass_categorical_50_ep_80_bs.h5")
     model.compile(optimizer='adam',
                   loss='categorical_crossentropy',
                   metrics=['accuracy'])
