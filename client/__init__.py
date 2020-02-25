@@ -2,7 +2,7 @@ import ast
 import csv
 import sys, os
 
-import pandas as pd
+from pandas import DataFrame, to_datetime
 from PyQt5 import uic
 from PyQt5.QtChart import QChartView, QValueAxis, QBarCategoryAxis, QBarSet, QBarSeries, QChart
 from PyQt5.QtCore import QFile, QTextStream, Qt
@@ -11,17 +11,17 @@ from PyQt5.QtWidgets import (QApplication, QComboBox, QHeaderView, QLineEdit,
                              QMainWindow, QPushButton, QTableWidget, QTableView,
                              QTableWidgetItem, QMessageBox, QFileDialog)
 
-from charts import Piechart, Barchart
-from datahandler import DataHandler
-from devtools import filedata # remove for integration
-from logs import PandasModel
+from client.charts import Piechart, Barchart
+from client.datahandler import DataHandler
+# from devtools import filedata # remove for integration
+from client.logs import PandasModel
 
 
 class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
         #Load the UI Page
-        uic.loadUi('main.ui', self)
+        uic.loadUi('client/main.ui', self)
 
         # upload
         self.actionUpload.triggered.connect(self.upload)
@@ -47,27 +47,13 @@ class MainWindow(QMainWindow):
         msgBox.exec()
         
     def upload(self):
-        fileName, _ = QFileDialog.getOpenFileName(None, "Select Text File", "", "Text Files (*.txt)")
+        fileName, _ = QFileDialog.getOpenFileName(None, "Select CSV File", "", "CSV Files (*.csv)")
         f = open(fileName, "r")
-
-        # fileName, _ = QFileDialog.getOpenFileName(None, "Select Pcap File", "", "Text Files (*.pcap)") # use this line to open pcap
-
-        ### insert handing over to ML side code here
-
-        # if fileName:
-        #     Clientsock.send(fileName)
-        #     self.showMessageBox('File uploaded successfully',"File not uploaded successfully")
-
-
-
-
-        # else:
-        #     self.showMessageBox('File not Uploaded',"File not uploaded successfully")
 
         # return from ML code
         data = f.readline().strip("\n")
         data = ast.literal_eval(data)
-        self.df = pd.DataFrame.from_dict(data)
+        self.df = DataFrame.from_dict(data)
         
         QApplication.processEvents()
 
@@ -217,7 +203,7 @@ class MainWindow(QMainWindow):
         exportdata = self.data.getData()
         formatteddata = exportdata.transpose()
         formatteddata['IsAtk'] = formatteddata['IsAtk'].map({1:'Yes', 0:'No'}) # Changes 1 and 0 to Yes and No for table
-        formatteddata['Time'] = pd.to_datetime(formatteddata['Time'],unit='s') # Convert epoch time to human readable
+        formatteddata['Time'] = to_datetime(formatteddata['Time'],unit='s') # Convert epoch time to human readable
         if fileName[0]:
             try:
                 formatteddata.to_csv(str(fileName[0]), header=True)
@@ -237,7 +223,7 @@ class MainWindow(QMainWindow):
     def exit(self):
         sys.exit()
 
-def main():
+def start():
     app = QApplication(sys.argv)
     main = MainWindow()
     main.showMaximized()
@@ -245,5 +231,3 @@ def main():
     main.popup()
     sys.exit(app.exec_())
 
-if __name__ == '__main__':         
-    main()
