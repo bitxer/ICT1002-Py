@@ -91,13 +91,17 @@ class Writer():
         Exception
             If write is unsuccessful and an exception is raised
         '''
-        def _csv(): return self.df.to_csv(index=False, header=True, path_or_buf=self.path)
-        def _tsv(): return self.df.to_csv(
-            index=False, header=True,  path_or_buf=self.path, sep='\t')
-        def _json(): return self.df.to_json(
-            index=False, indent=2, path_or_buf=self.path, orient='table')
-        def _excel(): return self.df.to_excel(
-            index=False, header=True, excel_writer=self.path)
+        def _csv():
+            return self.df.to_csv(index=False, header=True, path_or_buf=self.path)
+
+        def _tsv():
+            return self.df.to_csv(index=False, header=True,  path_or_buf=self.path, sep='\t')
+
+        def _json():
+            return self.df.to_json(index=False, indent=2, path_or_buf=self.path, orient='table')
+
+        def _excel():
+            return self.df.to_excel(index=False, header=True, excel_writer=self.path)
 
         eval('{}()'.format(self.exporttype))
         return True
