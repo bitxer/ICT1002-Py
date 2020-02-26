@@ -1,7 +1,7 @@
 import pandas as pd
 
 def main():
-    fname = 'sample.csv'
+    fname = ''
     delta = 31536000 * 2
     csv = pd.read_csv(fname)
     csv['Timestamp'] += delta
