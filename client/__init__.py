@@ -45,7 +45,7 @@ class MainWindow(QMainWindow):
         msgBox.exec()
         
     def upload(self):
-        fileName, _ = QFileDialog.getOpenFileName(None, "Select CSV File", "", "CSV Files (*.csv)")
+        fileName, _ = QFileDialog.getOpenFileName(None, "Select File", "", "All Files (*.*)")
 
         if fileName is not '':
             proc = ProcessData(fileName)
