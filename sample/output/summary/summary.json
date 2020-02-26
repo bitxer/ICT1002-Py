@@ -1,0 +1,115 @@
+{
+  "schema":{
+    "fields":[
+      {
+        "name":"Protocol & Ports",
+        "type":"string"
+      },
+      {
+        "name":"Counts",
+        "type":"integer"
+      },
+      {
+        "name":"IP Address",
+        "type":"string"
+      },
+      {
+        "name":"Counts",
+        "type":"integer"
+      }
+    ],
+    "pandas_version":"0.20.0"
+  },
+  "data":[
+    {
+      "Protocol & Ports":"UDP:80",
+      "Counts":82,
+      "IP Address":"76.45.32.65",
+      "Counts":32
+    },
+    {
+      "Protocol & Ports":"TCP:80",
+      "Counts":77,
+      "IP Address":"98.56.123.245",
+      "Counts":32
+    },
+    {
+      "Protocol & Ports":"TCP:8080",
+      "Counts":21,
+      "IP Address":"56.53.78.45",
+      "Counts":27
+    },
+    {
+      "Protocol & Ports":"TCP:22",
+      "Counts":18,
+      "IP Address":"61.141.73.59",
+      "Counts":14
+    },
+    {
+      "Protocol & Ports":"TCP:21",
+      "Counts":17,
+      "IP Address":"117.243.202.60",
+      "Counts":13
+    },
+    {
+      "Protocol & Ports":"UDP:53",
+      "Counts":6,
+      "IP Address":"77.64.7.18",
+      "Counts":11
+    },
+    {
+      "Protocol & Ports":"UDP:500",
+      "Counts":6,
+      "IP Address":"131.69.142.177",
+      "Counts":11
+    },
+    {
+      "Protocol & Ports":"UDP:67",
+      "Counts":5,
+      "IP Address":"29.200.111.91",
+      "Counts":8
+    },
+    {
+      "Protocol & Ports":"TCP:3389",
+      "Counts":3,
+      "IP Address":"173.101.65.66",
+      "Counts":8
+    },
+    {
+      "Protocol & Ports":"TCP:9984",
+      "Counts":3,
+      "IP Address":"101.207.111.66",
+      "Counts":7
+    },
+    {
+      "Protocol & Ports":"TCP:43",
+      "Counts":1,
+      "IP Address":"133.244.232.151",
+      "Counts":7
+    },
+    {
+      "Protocol & Ports":"TCP:1086",
+      "Counts":1,
+      "IP Address":"179.192.14.223",
+      "Counts":7
+    },
+    {
+      "Protocol & Ports":"TCP:1113",
+      "Counts":1,
+      "IP Address":"121.155.57.68",
+      "Counts":7
+    },
+    {
+      "Protocol & Ports":"TCP:51946",
+      "Counts":1,
+      "IP Address":"181.116.83.153",
+      "Counts":6
+    },
+    {
+      "Protocol & Ports":"TCP:53080",
+      "Counts":1,
+      "IP Address":"84.54.8.245",
+      "Counts":6
+    }
+  ]
+}
