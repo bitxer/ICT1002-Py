@@ -1,8 +1,9 @@
 import os
 from pandas import read_csv, read_excel, read_json
+from pandas import DataFrame
 
 class Reader():
-    def __init__(self, path, type):
+    def __init__(self, path, importformat):
         '''
         Initialise reader to read log data
         
@@ -10,16 +11,16 @@ class Reader():
         ----------
         path : str
             Path to log file
-        type : int
-            type can be one of 4 values [1, 2, 3, 4] to represent
-            [csv, tsv, json, excel] file type respectively.
+        importformat : int
+            importformat can be one of 4 values [1, 2, 3, 4] to represent
+            [csv, tsv, json, excel] file format respectively.
             
         Raise
         -----
         FileExistsError
             Raised when file exists and user does not want to overwrite file
         ValueError
-            Raised when a invalid file type is given
+            Raised when a invalid file format is given
         '''
         self.path = path
         # if os.path.exists(path):
@@ -27,11 +28,11 @@ class Reader():
         # else:
         #     raise FileNotFoundError("Specified directory not present")
             
-        types = {1: '_csv', 2: "_tsv", 3: '_json', 4: '_excel'}
-        if type not in types.keys():
-            raise ValueError('Invalid type specified')
+        importformats = {1: '_csv', 2: "_tsv", 3: '_json', 4: '_excel'}
+        if importformat not in importformats.keys():
+            raise ValueError('Invalid format specified')
         
-        self.type = types[type]
+        self.importformat = importformats[importformat]
 
 
     def read(self):
@@ -54,11 +55,14 @@ class Reader():
         _json = lambda : read_json(self.path)
         _excel = lambda : read_excel(self.path)
 
-        return eval('{}()'.format(self.type))
+        return eval('{}()'.format(self.importformat))
 
+def export_to_file(path, exporttype, df):
+    writer = Writer(path, exporttype, df)
+    return writer.write()
 
 class Writer():
-    def __init__(self, path, type, df):
+    def __init__(self, path, exporttype, df):
         '''
         Initialise writer to write data to file
         
@@ -66,41 +70,26 @@ class Writer():
         ----------
         path : str
             Path to write file to
-        type : int
-            type can be one of 4 values [1, 2 ,3, 4] to represent
-            [csv, tsv, json, excel] file type respectively.
+        exporttype : int
+            exporttype can be one of 4 values [1, 2 ,3, 4] to represent
+            [csv, tsv, json, excel] file format respectively.
         df : pandas dataframe
             pandas dataframe containing data to be exported
 
         Raise
         -----
-        FileExistsError
-            Raised when file exists and user does not want to overwrite file
         ValueError
-            Raised when a invalid file type is given
+            Raised when a invalid file format is given
         '''
-        if os.path.exists(path):
-            valid = False
-            while not valid:
-                opt = input("File exists. Do you want to overwrite file? [Y/n]").strip()
-                if opt not in ['Y', 'n']:
-                    print('Invalid option')
-                    continue
-
-                valid = True
-                
-            if opt == 'Y':
-                self.path = path
-            elif opt == 'n':
-                raise FileExistsError("File present")
+        self.path = path
         
         self.df = df
 
-        types = {1: '_csv', 2: "_tsv", 3: '_json', 4: '_excel'}
-        if type not in types.keys():
+        exporttypes = {1: '_csv', 2: "_tsv", 3: '_json', 4: '_excel'}
+        if exporttype not in exporttypes.keys():
             raise ValueError('Invalid type specified')
         
-        self.type = types[type]
+        self.exporttype = exporttypes[exporttype]
     
     def write(self):
         '''
@@ -117,10 +106,10 @@ class Writer():
         Exception
             If write is unsuccessful and an exception is raised
         '''
-        _csv = lambda : self.df.to_csv(index=False, path_or_buf=self.path)
-        _tsv = lambda : self.df.to_csv(index=False, path_or_buf=self.path, sep='\t')
-        _json = lambda : self.df.to_json(index=False, path_or_buf=self.path)
-        _excel = lambda : self.df.to_excel(index=False, path_or_buf=self.path)
+        _csv = lambda : self.df.to_csv(index=False, header=True, path_or_buf=self.path)
+        _tsv = lambda : self.df.to_csv(index=False, header=True,  path_or_buf=self.path, sep='\t')
+        _json = lambda : self.df.to_json(index=False, header=True, path_or_buf=self.path)
+        _excel = lambda : self.df.to_excel(index=False, header=True, path_or_buf=self.path)
 
-        eval('{}()'.format(self.type))
+        eval('{}()'.format(self.exporttype))
         return True

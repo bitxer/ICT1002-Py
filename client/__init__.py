@@ -13,6 +13,7 @@ from client.charts import Piechart, Barchart
 from client.datahandler import DataHandler
 from client.logs import PandasModel
 from modules.Processor import ProcessData
+from modules.Parser import export_to_file
 
 class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
@@ -51,8 +52,6 @@ class MainWindow(QMainWindow):
             proc.parse()
             data = proc.analyse()
             self.df = DataFrame.from_dict(data)
-
-            print(self.df)
 
             self.display()
         else:
@@ -193,13 +192,11 @@ class MainWindow(QMainWindow):
         ip = self.data.getTopIPs()
         fileName = QFileDialog.getSaveFileName(None,  "Save CSV File", "", "CSV Files (*.csv)")
         if fileName[0]:
-            with open(fileName[0], 'w') as csv_file:
-                fieldnames = ['Protocol & Ports', 'Counts', 'IP Address', 'Counts']
-                writer = csv.writer(csv_file,lineterminator='\n')
-                writer.writerow(fieldnames)
-
-                for proto, ips in zip(protocol.items(), ip.items()):
-                    writer.writerow(proto + ips)
+            # TODO: Rewrite with writer
+            export_data = [x + y for x, y in zip(protocol.items(), ip.items())]
+            export_dataframe = ['Protocol & Ports','Counts','IP Address','Counts']
+            export_dataframe = DataFrame(export_data, columns=export_dataframe)
+            export_to_file(fileName[0], 1, export_dataframe)
             self.showMessageBox('File Exported',"File Exported successfully")
         else:
             self.showMessageBox('File not Exported',"File not Exported successfully")
@@ -212,7 +209,7 @@ class MainWindow(QMainWindow):
         formatteddata['Time'] = to_datetime(formatteddata['Time'],unit='s') # Convert epoch time to human readable
         if fileName[0]:
             try:
-                formatteddata.to_csv(str(fileName[0]), header=True, index=False)
+                export_to_file(str(fileName[0]), 1, formatteddata)
             except:
                 self.showMessageBox('File not Exported',"File not Exported successfully")
             else:
