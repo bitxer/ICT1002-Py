@@ -190,26 +190,26 @@ class MainWindow(QMainWindow):
     def Summary(self):
         protocol = self.data.getTopProtocols()
         ip = self.data.getTopIPs()
-        fileName = QFileDialog.getSaveFileName(None,  "Save CSV File", "", "CSV Files (*.csv)")
+        fileName = QFileDialog.getSaveFileName(self, "Save File", "", "All Files (*.*)")
         if fileName[0]:
             # TODO: Rewrite with writer
             export_data = [x + y for x, y in zip(protocol.items(), ip.items())]
             export_dataframe = ['Protocol & Ports','Counts','IP Address','Counts']
             export_dataframe = DataFrame(export_data, columns=export_dataframe)
-            export_to_file(fileName[0], 1, export_dataframe)
+            export_to_file(fileName[0], export_dataframe)
             self.showMessageBox('File Exported',"File Exported successfully")
         else:
             self.showMessageBox('File not Exported',"File not Exported successfully")
             
     def TableDetails(self):
-        fileName = QFileDialog.getSaveFileName(None,  "Save CSV File", "", "CSV Files (*.csv)")
+        fileName = QFileDialog.getSaveFileName(self, "Save File", "", "All Files (*.*)")
         exportdata = self.data.getData()
         formatteddata = exportdata.transpose()
         formatteddata['IsAtk'] = formatteddata['IsAtk'].map({1:'Yes', 0:'No'}) # Changes 1 and 0 to Yes and No for table
         formatteddata['Time'] = to_datetime(formatteddata['Time'],unit='s') # Convert epoch time to human readable
         if fileName[0]:
             try:
-                export_to_file(str(fileName[0]), 1, formatteddata)
+                export_to_file(str(fileName[0]), formatteddata)
             except:
                 self.showMessageBox('File not Exported',"File not Exported successfully")
             else:
