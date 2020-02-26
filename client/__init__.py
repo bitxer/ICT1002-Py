@@ -126,6 +126,7 @@ class MainWindow(QMainWindow):
         self.atksearch.clear()
         self.timesearch.clear()
 
+        self.pdmdl.clear()
         self.logtable.setModel(self.pdmdl)
         
     def displaychart(self, widgetname, chartseries, header):

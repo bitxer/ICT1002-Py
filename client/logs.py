@@ -95,5 +95,8 @@ class PandasModel(QAbstractTableModel):
 
         result = self._search()
         result = self.ogdata[result]
-
+        self.rowcount = len(result)
         return result[self.header]
+    
+    def clear(self):
+        self.rowcount = len(self._data.values)
