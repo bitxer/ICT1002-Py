@@ -20,20 +20,18 @@ class PandasModel(QAbstractTableModel):
             self.ogdata['Time'] = pd.to_datetime(self.ogdata['Time'],unit='s') # Convert epoch time to human readable
             self._data = data.transpose()
             self._data = self._data[self.header]
-
         else:
             self._data = data
         
+        self.rowcount = len(self._data.values)
         self._data['Atk'] = self._data['Atk'].fillna('Not Attack') # replace nan with Not Attack
         self._data['Time'] = pd.to_datetime(self._data['Time'],unit='s') # Convert epoch time to human readable
-
-
 
     def rowCount(self, parent=None):
         """
         Return Row Count
         """
-        return len(self._data.values)
+        return self.rowcount
 
     def columnCount(self, parent=None):
         """
