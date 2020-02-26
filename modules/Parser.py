@@ -1,6 +1,7 @@
 import os
 from pandas import read_csv, read_excel, read_json
 from pandas import DataFrame
+from numpy import float64
 
 class Reader():
     def __init__(self, path):
@@ -39,12 +40,25 @@ class Reader():
             If read is unsuccessful
         '''
 
-        def _csv(): return read_csv(self.path)
-        def _tsv(): return read_csv(self.path, sep='\t')
-        def _json(): return read_json(self.path)
-        def _excel(): return read_excel(self.path)
+        def _csv():
+            return read_csv(self.path)
 
-        return eval('{}()'.format(self.importformat))
+        def _tsv():
+            return read_csv(self.path, sep='\t')
+
+        def _json():
+            return read_json(self.path, orient='split', convert_dates=False, convert_axes=False)
+
+        def _excel():
+            return read_excel(self.path)
+
+        data = eval('{}()'.format(self.importformat))
+        if self.importformat in ['_json', '_excel']:
+            for field in data:
+                if field != 'SourceIP':
+                    data[field] = data[field].astype(float64)
+        
+        return data
 
 
 def export_to_file(path, df):
