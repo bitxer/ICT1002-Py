@@ -137,4 +137,3 @@ def run_ML(fileName, optimizer='adam', epochs=100, batch_size=50):
         fout.write('\telapsed time: {:.2f} sec\n'.format(elapsed))
 
 
-
