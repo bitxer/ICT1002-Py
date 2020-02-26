@@ -52,8 +52,6 @@ class MainWindow(QMainWindow):
             data = proc.analyse()
             self.df = DataFrame.from_dict(data)
 
-            print(self.df)
-
             self.display()
         else:
             self.showMessageBox("File Not Uploaded", "File Not Uploaded Successfully")
