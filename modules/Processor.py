@@ -8,7 +8,7 @@ class ProcessData():
         self.format = format
     
     def parse(self):
-        self.reader = Reader(self.filename, 1)
+        self.reader = Reader(self.filename)
         self.df = self.reader.read()
         return self.df
     
