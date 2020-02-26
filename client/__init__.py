@@ -196,7 +196,7 @@ class MainWindow(QMainWindow):
             export_data = [x + y for x, y in zip(protocol.items(), ip.items())]
             export_dataframe = ['Protocol & Ports','Counts','IP Address','Counts']
             export_dataframe = DataFrame(export_data, columns=export_dataframe)
-            export_to_file(fileName[0], 1, export_dataframe)
+            export_to_file(fileName[0], export_dataframe)
             self.showMessageBox('File Exported',"File Exported successfully")
         else:
             self.showMessageBox('File not Exported',"File not Exported successfully")
@@ -209,7 +209,7 @@ class MainWindow(QMainWindow):
         formatteddata['Time'] = to_datetime(formatteddata['Time'],unit='s') # Convert epoch time to human readable
         if fileName[0]:
             try:
-                export_to_file(str(fileName[0]), 1, formatteddata)
+                export_to_file(str(fileName[0]), formatteddata)
             except:
                 self.showMessageBox('File not Exported',"File not Exported successfully")
             else:
