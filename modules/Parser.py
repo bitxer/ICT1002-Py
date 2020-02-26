@@ -1,6 +1,7 @@
 import os
 from pandas import read_csv, read_excel, read_json
 from pandas import DataFrame
+from numpy import float64
 
 class Reader():
     def __init__(self, path):
@@ -39,12 +40,25 @@ class Reader():
             If read is unsuccessful
         '''
 
-        def _csv(): return read_csv(self.path)
-        def _tsv(): return read_csv(self.path, sep='\t')
-        def _json(): return read_json(self.path)
-        def _excel(): return read_excel(self.path)
+        def _csv():
+            return read_csv(self.path)
 
-        return eval('{}()'.format(self.importformat))
+        def _tsv():
+            return read_csv(self.path, sep='\t')
+
+        def _json():
+            return read_json(self.path, orient='split', convert_dates=False, convert_axes=False)
+
+        def _excel():
+            return read_excel(self.path)
+
+        data = eval('{}()'.format(self.importformat))
+        if self.importformat in ['_json', '_excel']:
+            for field in data:
+                if field != 'SourceIP':
+                    data[field] = data[field].astype(float64)
+        
+        return data
 
 
 def export_to_file(path, df):
@@ -91,13 +105,17 @@ class Writer():
         Exception
             If write is unsuccessful and an exception is raised
         '''
-        def _csv(): return self.df.to_csv(index=False, header=True, path_or_buf=self.path)
-        def _tsv(): return self.df.to_csv(
-            index=False, header=True,  path_or_buf=self.path, sep='\t')
-        def _json(): return self.df.to_json(
-            index=False, indent=2, path_or_buf=self.path, orient='table')
-        def _excel(): return self.df.to_excel(
-            index=False, header=True, excel_writer=self.path)
+        def _csv():
+            return self.df.to_csv(index=False, header=True, path_or_buf=self.path)
+
+        def _tsv():
+            return self.df.to_csv(index=False, header=True,  path_or_buf=self.path, sep='\t')
+
+        def _json():
+            return self.df.to_json(index=False, indent=2, path_or_buf=self.path, orient='table')
+
+        def _excel():
+            return self.df.to_excel(index=False, header=True, excel_writer=self.path)
 
         eval('{}()'.format(self.exporttype))
         return True
