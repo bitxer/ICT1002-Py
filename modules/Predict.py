@@ -48,7 +48,6 @@ def run_predict_isAtk(df):
                 "Time": int(t[0])
             }
 
-
         else:
             row_index = df1.loc[df1["ID"] == q].index[0]
             df2.loc[df1.index[row_index]] = df1.iloc[row_index]
@@ -69,6 +68,8 @@ def run_predict_Atks(df):
         output : dict
             Labels Attack Traffic
 	'''
+    columnList = df.columns
+    df1 = df.copy()
 
     output = {}
     protocols = {num: name[8:] for name, num in vars(socket).items() if name.startswith("IPPROTO")}
@@ -83,7 +84,7 @@ def run_predict_Atks(df):
         7: 'DoS attacks-SlowHTTPTest',
         8: 'DoS attacks-Slowloris',
         9: 'FTP-BruteForce',
-        10: 'Infilteration',
+        10: 'Infiltration',
         11: 'SQL Injection',
         12: 'SSH-Bruteforce'
     }
@@ -100,6 +101,7 @@ def run_predict_Atks(df):
                   metrics=['accuracy'])
 
     predictions = model.predict_proba(df_test)
+
     for l, sip, p1, p2, p3, t in zip(logID, SourceIP, predictions, protocol, port, time):
         output[int(l)] = {"IsAtk": 1,
                           "IP": sip,
@@ -127,6 +129,7 @@ def run_predict_main(df):
 
 	'''
     (noAtk, Atk) = run_predict_isAtk(df)
+    print(noAtk)
     output = noAtk.copy()
     atk_output = run_predict_Atks(Atk)
 
