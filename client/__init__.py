@@ -45,7 +45,7 @@ class MainWindow(QMainWindow):
         msgBox.exec()
         
     def upload(self):
-        fileName, _ = QFileDialog.getOpenFileName(None, "Select File", "", "All Files (*.*)")
+        fileName, _ = QFileDialog.getOpenFileName(None, "Select File", "", "Log Files (*.csv *.tsv *json *xls *xlsx)")
 
         if fileName is not '':
             proc = ProcessData(fileName)
@@ -191,7 +191,7 @@ class MainWindow(QMainWindow):
     def Summary(self):
         protocol = self.data.getTopProtocols()
         ip = self.data.getTopIPs()
-        fileName = QFileDialog.getSaveFileName(self, "Save File", "", "All Files (*.*)")
+        fileName = QFileDialog.getSaveFileName(self, "Save File", "", "Log Files (*.csv *.tsv *json *xls *xlsx)")
         if fileName[0]:
             # TODO: Rewrite with writer
             export_data = [x + y for x, y in zip(protocol.items(), ip.items())]
@@ -203,7 +203,7 @@ class MainWindow(QMainWindow):
             self.showMessageBox('File not Exported',"File not Exported successfully")
             
     def TableDetails(self):
-        fileName = QFileDialog.getSaveFileName(self, "Save File", "", "All Files (*.*)")
+        fileName = QFileDialog.getSaveFileName(self, "Save File", "", "Log Files (*.csv *.tsv *json *xls *xlsx)")
         exportdata = self.data.getData()
         formatteddata = exportdata.transpose()
         formatteddata['IsAtk'] = formatteddata['IsAtk'].map({1:'Yes', 0:'No'}) # Changes 1 and 0 to Yes and No for table
