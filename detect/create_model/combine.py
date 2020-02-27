@@ -1,7 +1,6 @@
 import os
 import pandas as pd
 from sklearn.utils import shuffle
-import sys
 
 labels = {'Benign': 0, 'FTP-BruteForce': 1, 'SSH-Bruteforce': 1, 'DoS attacks-GoldenEye': 1, 'DoS attacks-Slowloris': 1,
      'DoS attacks-SlowHTTPTest': 1, 'DoS attacks-Hulk': 1, 'Brute Force -Web': 1, 'Brute Force -XSS': 1,
