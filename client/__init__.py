@@ -127,6 +127,7 @@ class MainWindow(QMainWindow):
         self.timesearch.clear()
 
         self.pdmdl.clear()
+        self.searchdata = None
         self.logtable.setModel(self.pdmdl)
         
     def displaychart(self, widgetname, chartseries, header):
@@ -180,9 +181,9 @@ class MainWindow(QMainWindow):
             searchquery['IsAtk'] = atk[searchquery['IsAtk']]
 
         if bool(searchquery) is True:
-            search = self.pdmdl.search(searchquery)
-            if search is not None:
-                self.logtable.setModel(PandasModel(search, search=True))
+            self.searchdata = self.pdmdl.search(searchquery)
+            if self.searchdata is not None:
+                self.logtable.setModel(PandasModel(self.searchdata, search=True))
             else:
                 self.clear()
         else:
@@ -204,10 +205,14 @@ class MainWindow(QMainWindow):
             
     def TableDetails(self):
         fileName = QFileDialog.getSaveFileName(self, "Save File", "", "Log Files (*.csv *.tsv *json *xls *xlsx)")
-        exportdata = self.data.getData()
-        formatteddata = exportdata.transpose()
-        formatteddata['IsAtk'] = formatteddata['IsAtk'].map({1:'Yes', 0:'No'}) # Changes 1 and 0 to Yes and No for table
-        formatteddata['Time'] = to_datetime(formatteddata['Time'],unit='s') # Convert epoch time to human readable
+        if self.searchdata is None:
+            exportdata = self.data.getData()
+            formatteddata = exportdata.transpose()
+            formatteddata['IsAtk'] = formatteddata['IsAtk'].map({1:'Yes', 0:'No'}) # Changes 1 and 0 to Yes and No for table
+            formatteddata['Time'] = to_datetime(formatteddata['Time'],unit='s') # Convert epoch time to human readable
+        else:
+            formatteddata = self.searchdata
+        
         if fileName[0]:
             try:
                 export_to_file(str(fileName[0]), formatteddata)
