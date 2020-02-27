@@ -61,9 +61,9 @@ class Barchart:
 
         self.sorteddict = OrderedDict(sorted(datadict.items()))
         setlist = [value for key, value in self.sorteddict.items()] # list of attack counts over the past 12 months to append to barset
-        
         barset.append(setlist)
         self.series = QBarSeries()
+        self.series.setLabelsVisible(True)
         self.series.append(barset)
 
     def getSeries(self):
