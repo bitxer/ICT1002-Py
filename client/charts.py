@@ -4,17 +4,21 @@ import time
 from collections import OrderedDict
 
 class Piechart:
-    """
-    Processes Pie Chart
-    """
     def __init__(self, chartseries, title):
+        '''
+        Processes Pie Chart
+        Parameters
+        --------------------
+        chartseries: PyQT Series to be displayed on chart
+        title: str of title to be header of chart
+        '''
         self.chartseries = chartseries
         self.title = title
 
     def create(self):
-        """
+        '''
         Creates Chart Data and returns
-        """
+        '''
         slices = QPieSlice()
         for x in range(0, len(self.chartseries.slices())):
             slices = self.chartseries.slices()[x]
@@ -31,17 +35,20 @@ class Piechart:
         return chart
 
 class Barchart:
-    """
-    Processes BarChart Data
-    """
     def __init__(self, data):
+        '''
+        Processes BarChart Data
+        Parameters
+        -----------------------
+        data : Pandas DataFrame to be processed
+        '''
         self.data = data
         self.handler()
     
     def handler(self):
-        """
+        '''
         Processes Data
-        """
+        '''
         barset = QBarSet('Attacks')
         countdata = self.data.agg('count')
         self.max = countdata.max()
@@ -67,15 +74,15 @@ class Barchart:
         self.series.append(barset)
 
     def getSeries(self):
-        """
+        '''
         Returns Series for QChart
-        """
+        '''
         return self.series
 
     def getKeys(self):
-        """
+        '''
         Returns the month/year for the X-Axis
-        """
+        '''
         months = tuple(self.sorteddict.keys())
         monthdict = {1: 'Jan', 2: 'Feb', 3: 'Mar', 4: 'Apr', 5: 'May', 6: 'Jun', 7: 'Jul', 8: 'Aug', 9: 'Sept', 10: 'Oct', 11: 'Nov', 12: 'Dec'}
 
@@ -87,7 +94,7 @@ class Barchart:
         return tuple(output)
     
     def getMax(self):
-        """
+        '''
         Returns highest attack count for the Y-Axis
-        """
+        '''
         return self.max

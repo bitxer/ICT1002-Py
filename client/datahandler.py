@@ -2,9 +2,9 @@ from PyQt5.QtChart import QPieSeries
 import pandas as pd
 
 class DataHandler:
-    """
+    '''
     DataHandler Class to process data
-    """
+    '''
     def __init__(self, data):
         self.data = data
         self.process()
@@ -12,9 +12,9 @@ class DataHandler:
         self.topProtocols()
 
     def process(self):
-        """
+        '''
         Processes Summary and Chart Data
-        """
+        '''
         self.summary = {
             'AtkCount' : self.data.loc['IsAtk'].value_counts()[1], # count number of 1s in the column
             'IP': self.data.loc['IP'].value_counts().to_dict(),
@@ -40,9 +40,9 @@ class DataHandler:
 
 
     def topIPs(self):
-        """
+        '''
         Process Top IPs List
-        """
+        '''
         top = sorted(self.summary['IP'], key=self.summary['IP'].get, reverse=True)
         output = {}
         for x in top:
@@ -51,9 +51,9 @@ class DataHandler:
         self.topips = output
 
     def topProtocols(self):
-        """
+        '''
         Process Top Protocols List
-        """
+        '''
         top = sorted(self.protoports, key=self.protoports.get, reverse=True)
         output = {}
         for x in top:
