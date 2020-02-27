@@ -129,7 +129,6 @@ def run_predict_main(df):
 
 	'''
     (noAtk, Atk) = run_predict_isAtk(df)
-    print(noAtk)
     output = noAtk.copy()
     atk_output = run_predict_Atks(Atk)
 
