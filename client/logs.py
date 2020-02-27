@@ -4,7 +4,6 @@ from PyQt5.QtCore import QAbstractTableModel, QVariant
 from PyQt5.QtCore import Qt, QItemSelectionModel
 from PyQt5.QtWidgets import QHeaderView, QTableWidgetItem
 import pandas as pd
-import numpy as np
 
 class PandasModel(QAbstractTableModel):
     header = ["Time", "IP Address", "Protocol", "Port", "Attack"]
