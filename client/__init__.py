@@ -256,6 +256,10 @@ class MainWindow(QMainWindow):
     def showMessageBox(self,title,message):
         '''
         Display message box
+        Parameters
+        ----------
+        title : str of title
+        message : str of message to display
         '''
         msgBox = QMessageBox()
         msgBox.setIcon(QMessageBox.Information)
