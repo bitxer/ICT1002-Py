@@ -132,3 +132,5 @@ dmypy.json
 
 # VSCode directory
 .vscode/
+
+tmp/
