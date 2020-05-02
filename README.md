@@ -47,7 +47,7 @@ building one GUI will be considered as one advanced features of your program.
 ## Project Reference Used
 1.  [CICFlowMeter](https://www.unb.ca/cic/research/applications.html#CICFlowMeter)
 
-## License and Copyright
+# License and Copyright
 Repository content (Excluding third-party resources, see below) shall be released under the [MIT License](LICENSE).
 
 This project is an assignment submission in partial fulfillment of the module ICT1002 Programming Fundementals.
