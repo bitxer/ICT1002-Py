@@ -1,5 +1,5 @@
 # Digital Crime Analyzer
-This repository contains the source code, in partial fulfilment, of the module ICT1002, Programming Fundamentals.
+This repository contains the source code of the assignment for python, in partial fulfilment, of the module ICT1002: Programming Fundamentals assignment
 
 ## Objective
 Python has become one of the most popular programming languages in a lot of application scenarios such as the data crawling, scripting, data analytics and Artificial Intelligence. Thus, the objective of this project is to allow you to develop a Python program such that you can:
