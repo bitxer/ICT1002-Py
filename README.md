@@ -1,14 +1,14 @@
 # Digital Crime Analyzer
 This repository contains the source code, in partial fulfilment, of the module ICT1002, Programming Fundamentals.
 
-# Objective
+## Objective
 Python has become one of the most popular programming languages in a lot of application scenarios such as the data crawling, scripting, data analytics and Artificial Intelligence. Thus, the objective of this project is to allow you to develop a Python program such that you can:
 1. Apply and familiarize the knowledge learnt from the class
 2. Learn more new Python programming skills through self-learning to deepen in your skills
 3. Learn team collaboration using Python tools and libraries
 4. Gain more hands-on experience in solving a real-world problem using Python
 
-# The Detail Requirements
+## The Detail Requirements
 Digital crime becomes more and more popular. It refers to the criminal activity done against computers and networks or using the computer as a tool to do that activity. It can be in the form of offences against computer data or systems, unauthorized access, modification or impairment of a computer or digital system.
 In this project, you are tasked to develop one tool to help the crime investigators to better investigate the digital crime. In digital crime investigations, the investigators and incident responders often need to examine and analyze log records and disk / memory images or other possible resources. For example, they may utilize a history of actions to reconstruct a chain of past events and decide whether or not a crime has been committed, the circumstances surrounding the crime and the perpetrator. Normally, the online behaviors can be identified from the various log files together with digital trails or artifacts extracted from disk or memory images. So, you need to develop a good data-driven solution such that the crime investigators can better understand the digital behaviors with various features.
 Overall, your team shall perform below tasks in your project:
@@ -29,12 +29,12 @@ program should be able to allow users to choose which function to perform and di
 nicely. You can build any innovative UI. Note that it is not compulsory to build a GUI. However,
 building one GUI will be considered as one advanced features of your program.
 
-# References
+## References
 1.  [DDoS monitoring: how to know you’re under attack](https://www.loggly.com/blog/ddos-monitoring-how-to-know-youre-under-attack/)
 2.  [How to Analyze Distributed Denial-of-Service (DDos) Attack](https://kukuruku.co/post/some-useful-commands-to-use-during-ddos/)
 3.  [ddosflowgen](https://github.com/GaloisInc/ddosflowgen)
 
-# Sample logs Sources
+## Sample logs Sources
 1.  [SecRepo.com - Samples of Security Related Data](http://www.secrepo.com/)
 2.  [The UNSW-NB15 Dataset Description](https://www.unsw.adfa.edu.au/unsw-canberra-cyber/cybersecurity/ADFA-NB15-Datasets/)
 3.  [Apache2 access logs](http://www.thierrysigg.com/piwik/plugins/VisitorGenerator/data/access.log)
@@ -44,5 +44,5 @@ building one GUI will be considered as one advanced features of your program.
 7.  [satsig.net Sample log](http://www.satsig.net/logfile.htm)
 8.  [IIS 10.0 Sample Access Logs](https://www.site-logfile-explorer.com/logfile-samples/u_ex171118-sample.txt)
 
-# Project Reference Used
+## Project Reference Used
 1.  [CICFlowMeter](https://www.unb.ca/cic/research/applications.html#CICFlowMeter)
