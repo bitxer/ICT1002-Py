@@ -46,6 +46,7 @@ building one GUI will be considered as one advanced features of your program.
 
 ## Project Reference Used
 1.  [CICFlowMeter](https://www.unb.ca/cic/research/applications.html#CICFlowMeter)
+2.  [IDS 2018 | Datasets | Research | Canadian Institute for Cybersecurity | UNB](https://www.unb.ca/cic/datasets/ids-2018.html)
 
 # License and Copyright
 Repository content (Excluding third-party resources, see below) shall be released under the [MIT License](LICENSE).
